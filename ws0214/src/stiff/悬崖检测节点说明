@@ -1,0 +1,28 @@
+在stiff文件夹下是检测悬崖并发送消息的节点，
+包名称：stiff 					节点名称：stiff_detect
+话题名称：stifffwaterogm  			消息类型：sensor_driver_msgs::stiffwater
+
+
+消息格式：
+std_msgs/Header header--包含时间戳，和帧id等信息
+int16 ogm_height--栅格地图高
+int16 ogm_width--栅格地图宽
+float vehicle_x--车辆在栅格地图中坐标x
+float vehicle_y--车辆在栅格地图中坐标y
+float32 resolution--栅格地图分辨率
+char[] ogm_data--栅格地图数据
+
+注：目前栅格地图的大小为40m×40m，分辨率为0.4m，宽、高为101，
+栅格数据类型为char，值为1代表该栅格处是悬崖，0代表不是悬崖。
+
+
+启动：
+要启动该节点需要在launch文件中添加<node pkg="stiff" type="stiffdetect" name="stiffdetect"></node>
+启动后会显示栅格地图图片以及检测到的悬崖区域，后期可以注释掉。
+
+///////////////////////////////////////////////////
+
+在sub_test文件夹下是sub_test节点，此节点是例程节点，功能是订阅悬崖检测的消息，并将悬崖区域在栅格地图中的位置显示出来。
+可通过 roslaunch sub_test sub_test.launch 来启动。
+
+

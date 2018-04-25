@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <system>
+	<playback_path type="string">/home/jkj/catkin_ws/data/data/2017-11-30_17-23-43</playback_path>
+	<!--<playback_path type="string">/home/qiwang/workspace/record_data/2017-01-10_12-30-38</playback_path>-->
+	<record_path type="string">/home/jkj/catkin_ws/data/data</record_path>
+	<record_on type="bool">0</record_on>
+	<playback_on type="bool">1</playback_on>
+	<playback_start_at type="double">0</playback_start_at>
+	<!--reserved for the system, always 0-->
+	<system_start_time type="double">0</system_start_time>
+	<log_on type="bool">1</log_on>
+    <log_path type="string">~/catkin_ws/data/logdata</log_path>
+	<GetINSData_on type="bool">1</GetINSData_on>
+	<GetGPSData_on type="bool">0</GetGPSData_on>
+    </system>
+
+    <iv_camera>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.05</timeout>
+	<!--show=1, noshow=0 !-->
+	<show_window>1</show_window>
+	<!--Freerun=0, Hardtrigger=1 !-->
+	<isHardTrigger>0</isHardTrigger>
+	<!--Auto=1, Manual=0 !-->
+	<ExporeMode>1</ExporeMode>
+	<SettingPath>/home/qiwang/workspace/mpc/iv_rcs/config/orb/offline_0.5.yaml</SettingPath>
+	<ScaleFactor>0.5</ScaleFactor>
+	<param1>0.123</param1>
+    </iv_camera>
+
+    <iv_lidar>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--playback_mode>1(pcap) 2(pcd)</playback_mode!-->
+	<playback_mode>1</playback_mode>
+	<!--pcapfile>G:\\ivrc\\lidar\\tuolichezhe.pcap</pcapfile!-->
+	<pcapfile>/home/jkj/data/data/1203-64-7.pcap</pcapfile>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.1</timeout>
+	<show_window>1</show_window>
+	<flag_ogmdetection>0</flag_ogmdetection>
+	<flag_diffdetection>0</flag_diffdetection>
+	<flag_circletangential>0</flag_circletangential>
+	<flag_circleradius>0</flag_circleradius>
+	<rigid_heightdiffthreshold>0.3</rigid_heightdiffthreshold>
+	<lidarnum>1</lidarnum>
+	<calibdir>toyota</calibdir>
+	<calibrationmode>0</calibrationmode>
+    </iv_lidar>
+    <GetGPSData>
+		<!--realtime=0, playback=1 !-->
+		<playback_on>1</playback_on>
+		<!--true or false !-->
+		<record_on>1</record_on>
+		<timeout>0.01</timeout>
+		<!--<port>9003</port>-->
+		<port>9003</port>
+		<pos_x>0</pos_x>
+		<pos_y>0</pos_y>
+		<pos_z>0</pos_z>
+		<yaw>2.7159</yaw>
+		<pitch>-2.5489</pitch>
+		<roll>0.607</roll>
+    </GetGPSData>
+    <GetINSData>
+        <!--realtime=0, playback=1 !-->
+        <playback_on>1</playback_on>
+        <!--true or false !-->
+        <record_on>1</record_on>
+        <timeout>0.01</timeout>
+        <!--<port>9002</port>-->
+        <port>9001</port>
+    </GetINSData>
+    <iv_lidar_b>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+	<show_window>1</show_window>
+	<lidar_ip>192.168.0.66</lidar_ip>
+	<lidar_port>443</lidar_port>
+    </iv_lidar_b>
+
+    <iv_531_controller>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.05</timeout>
+    </iv_531_controller>
+
+    <iv_mengshi_controller>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.05</timeout>
+    </iv_mengshi_controller>
+
+    <iv_531_planner>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+	<mode>0</mode>
+	<lateral_div>0</lateral_div>
+	<radius>10</radius>
+	<max_speed_roadwidth>6</max_speed_roadwidth>
+	<astar_heuristic_facter>20</astar_heuristic_facter>
+	<astar_clear_facter>1</astar_clear_facter>
+	<safezone_width>5</safezone_width>
+	<safezone_length>20</safezone_length>
+	<obstacle_height_thres>0.3</obstacle_height_thres>
+	<crossroad_self_motivated>1</crossroad_self_motivated>
+	<crossroad_self_trace>1</crossroad_self_trace>
+	<!--<clear>10</clear>-->
+	<!--<straight>10</straight>-->
+	<!--<radius>10</radius>-->
+	<!--<radius>10</radius>-->
+    </iv_531_planner>
+
+    <iv_navigation>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.001</timeout>
+	<!--<port>9002</port>-->
+	<port>9001</port>
+    </iv_navigation>
+
+    <iv_orb_slam>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.15</timeout>
+	<vocfile>0.1</vocfile>
+	<settingfile>0.1</settingfile>
+    </iv_orb_slam>
+
+    <iv_height_map>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+	<obstacle_thres>0.3</obstacle_thres>
+    </iv_height_map>
+
+    <iv_position>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+    </iv_position>
+
+    <iv_waypoint>
+	<playback_on>0</playback_on>
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+	<!--<waypoint_path>config/waypoint/0816_waypoint/BaShang_back.txt</waypoint_path>-->
+	<waypoint_path>config/waypoint/bashang_whole_reverse.txt</waypoint_path>
+	<speedline_path>config/waypoint/speedpoint/bashang_speed.txt</speedline_path>
+	<passby_waypoint_radius>30</passby_waypoint_radius>
+	<crossroad_detection>1</crossroad_detection>
+    </iv_waypoint>
+
+    <iv_crossroad_detection>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>0.1</timeout>
+	<!--the angle resolution of the search table!-->
+	<angleresolution>1</angleresolution>
+	<searchlength>50</searchlength><!--the laser length!-->
+	<carwidth>5</carwidth>
+	<!--length of the search center distant from current car position!-->
+	<searchPointlength>10</searchPointlength>
+	<!--threshold of continous frame to make sure the crossroad !-->
+	<countthreshold>3</countthreshold>
+	<!--the minimum value of the angle of a crossroad!-->
+	<anglethreshold>5</anglethreshold>
+	<!--the minimum value of the angle of a crossroad!-->
+	<erode_size>2</erode_size>
+	<!--the segment of two laser !-->
+	<segment_angle>15</segment_angle>
+	<!--dm!-->
+	<obstacle_height>0.3</obstacle_height>
+	<isshow>1</isshow>
+    </iv_crossroad_detection>
+
+    <iv_object_detection>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>0</record_on>
+	<timeout>1.0</timeout>
+    </iv_object_detection>
+
+    <iv_chassis>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.001</timeout>
+	<destination_ip>192.168.0.252</destination_ip>
+	<destination_port>8003</destination_port>
+	<local_ip>192.168.0.112</local_ip>
+	<local_port>9009</local_port>
+    </iv_chassis>
+
+    <iv_mpc_controller>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>0</playback_on>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.1</timeout>
+
+	<destination_ip>192.168.0.252</destination_ip>
+	<destination_port>8003</destination_port>
+	<local_ip>192.168.0.112</local_ip>
+	<local_port>9009</local_port>
+
+	<auto_on>1</auto_on>
+	<brake_on>0</brake_on>
+	<longitudinal_on>0</longitudinal_on>
+
+	<gear>n</gear>
+	<manual_test>1</manual_test>
+	<Test_mode>0</Test_mode>
+	<waypoint_file>/home/qiwang/record_data/waypoint</waypoint_file>
+	<waypoint_mode>3</waypoint_mode>
+    </iv_mpc_controller>
+
+    <iv_dgps>
+	<!--realtime=0, playback=1 !-->
+	<playback_on>1</playback_on>
+	<!--true or false !-->
+	<record_on>1</record_on>
+	<timeout>0.04</timeout>
+	<!--<destination_ip>192.168.0.200</destination_ip>-->
+	<!--<destination_port>8003</destination_port>-->
+	<local_ip>192.168.0.112</local_ip>
+	<local_port>9010</local_port>
+    </iv_dgps>
+</root>

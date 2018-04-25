@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="rviz" default="true" />
+  
+  <arg name="configfile" default="$(find covgrid_slam)/config/config.xml" />
+
+  <node pkg="covgrid_slam" type="masternode" name="masternode" args="--stderrthreshold=0  --log_dir=/home/jkj/catkin_ws/log" output="screen">
+  	<param name="config_file" value="$(arg configfile)"/>
+  </node>
+
+  <node pkg="covgrid_slam" type="scanRegistration" name="scanRegistration" args="--stderrthreshold=0  --log_dir=/home/jkj/catkin_ws/log" output="screen">
+  	<param name="config_file" value="$(arg configfile)" />
+  </node>
+  
+  <node pkg="covgrid_slam" type="laserOdometry" name="laserOdometry" args="--stderrthreshold=0  --log_dir=/home/jkj/catkin_ws/log" output="screen" respawn="true">
+  </node>
+
+  <node pkg="covgrid_slam" type="laserMapping" name="laserMapping" args="--stderrthreshold=0 --log_dir=/home/jkj/catkin_ws/log" output="screen">
+  <param name="updatemap" value="true" />
+  <param name="savemap" value="false" />
+  <param name="readmap" value="false" />
+  <param name="readmapdir" value="/home/jkj/catkin_ws/src/covgrid_slam/map/2017-09-07_15-45-25" />
+  </node>
+  
+  <node pkg="covgrid_slam" type="transformMaintenance" name="transformMaintenance" args="--stderrthreshold=0 --log_dir=/home/jkj/catkin_ws/log" output="screen"/>
+
+  <node pkg="covgrid_slam" type="getpointfrompcd" name="getpointfrompcd" args="--stderrthreshold=0  --log_dir=/home/jkj/catkin_ws/log" output="screen">
+  </node>
+  
+  <group if="$(arg rviz)">
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find covgrid_slam)/rviz_cfg/covgrid_slam.rviz" />
+  </group>
+
+</launch>
