@@ -73,7 +73,7 @@ int SocketMatTransmissionClient::transmit(vector<uchar>& encode)
 
 
 
-	char buf[65535];
+	unsigned char buf[65535];
 	memcpy(buf, &encode[0], encode.size()*sizeof(uchar));
 	if (send(sockClient, buf, sizeof(buf), 0) < 0)
 	{

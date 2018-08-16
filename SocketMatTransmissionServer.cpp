@@ -10,7 +10,8 @@
  
  
 #include "SocketMatTransmissionServer.h"
- 
+vector<uchar> decode;
+int pos = 0;
 SocketMatTransmissionServer::SocketMatTransmissionServer(void)
 {
 }
@@ -73,19 +74,35 @@ int SocketMatTransmissionServer::receive(cv::Mat& image)
 	needRecv = sizeof(recvBuf);
 	count = 0;
 	memset(&data,0,sizeof(data));
-	char buf[65535];
-	vector<uchar> decode;
+	unsigned char buf[1448];
+
 
 	int n = recv(sockConn, buf, sizeof(buf), 0);//接受缓存
-	int pos = 0;
-	while (pos < n)
+	cout<<n<<"....."<<endl;
+	if(n==0) {
+		sleep(1);
+		decode.clear();
+		pos=0;
+		return -1;
+	}
+	int i=0;
+	while (i < n)
 	{
-		decode.push_back(buf[pos++]);//存入vector
+		decode.push_back(buf[i++]);//存入vector
 	}
 	if(decode.size()==0) return -1;
+
+	if(n<1448){
+		cout<<decode.size()<<endl;
 	image = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码
+	decode.clear();
+	pos=0;
+	if(image.empty()) return -1;
 	imshow("image", image);
-	waitKey(30);
+	waitKey(5);
+
+	}
+//	waitKey(30);
 //	for (int i = 0; i < PACKAGE_NUM; i++)
 //	{
 //		int pos = 0;

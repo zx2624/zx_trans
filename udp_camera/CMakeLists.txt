@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.8)
+project(myrtt)
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(client client.cc )
+add_executable(server server.cc )
+target_link_libraries(client ${OpenCV_LIBS})
+target_link_libraries(server ${OpenCV_LIBS})

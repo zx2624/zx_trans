@@ -27,10 +27,10 @@ int main()
 		quality.push_back(50);//进行50%的压缩
 		imencode(".jpg", image, data_encode,quality);//将图像编码
 		cout<<data_encode.size()<<"   lll"<<endl;
-
-
+		Mat imageshow = imdecode(data_encode, CV_LOAD_IMAGE_COLOR);
+		imshow("test",imageshow);
 		socketMat.transmit(data_encode);
-		cv::waitKey(100);
+		cv::waitKey(30);
 	}
 
 //	socketMat.socketDisconnect();
