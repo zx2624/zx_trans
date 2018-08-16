@@ -1,4 +1,4 @@
-//i thing you are paranoid
+//i mean wt f zx 
 #include <opencv2/highgui.hpp>
 #include <iostream>
 extern "C"
