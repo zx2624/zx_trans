@@ -1,4 +1,6 @@
 //i mean wt f zx 
+//now im just testing 
+//actually im not sure how to use this merge function
 #include <opencv2/highgui.hpp>
 #include <iostream>
 extern "C"
