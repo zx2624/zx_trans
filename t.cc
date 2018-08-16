@@ -1,3 +1,4 @@
+//i thing you are paranoid
 #include <opencv2/highgui.hpp>
 #include <iostream>
 extern "C"
