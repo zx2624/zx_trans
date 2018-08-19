@@ -1,8 +1,8 @@
-prefix=/home/zx/桌面/camerasend/install
+prefix=/home/zx/桌面/test/camerasend/install
 
 Name: camera_udp
 Description: Description of camera_udp
 Version: 0.0.0
 Cflags: 
-Libs: -L/home/zx/桌面/camerasend/install/lib 
+Libs: -L/home/zx/桌面/test/camerasend/install/lib 
 Requires: 

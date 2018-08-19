@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/zx/CODE/test/udp/udp_camera/client.cc
+/home/zx/桌面/test/udp_camera/client.cc
 WinSock2.h
 -
 unistd.h

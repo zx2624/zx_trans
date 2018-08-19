@@ -55,7 +55,7 @@ int main(int argc, char** argv)
         std::vector<uchar> decode;
 
         int n = recv(m_sockServer, buf, sizeof(buf), 0);//接受缓存
-//        cout<<"n.....  "<<n<<endl;
+        cout<<"n.....  "<<n<<endl;
         int pos = 0;
         while (pos < n)
         {
@@ -64,7 +64,8 @@ int main(int argc, char** argv)
         buf[n] = 0;
         image = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码
         imshow("image", image);
-        waitKey(30);
+        waitKey(100);
     }
+    close(m_sockServer);
     return 0;
 }

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/zx/桌面/camerasend/src/camera_udp/src/sub_one_image.cpp
+/home/zx/桌面/test/camerasend/src/camera_udp/src/sub_one_image.cpp
 iostream
 -
 cv_bridge/cv_bridge.h
@@ -50,6 +50,8 @@ fcntl.h
 fcntl.h
 -
 mutex
+-
+thread
 -
 
 /opt/ros/kinetic/include/cv_bridge/cv_bridge.h

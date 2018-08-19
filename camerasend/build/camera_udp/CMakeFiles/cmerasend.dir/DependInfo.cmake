@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zx/桌面/camerasend/src/camera_udp/src/sub_one_image.cpp" "/home/zx/桌面/camerasend/build/camera_udp/CMakeFiles/cmerasend.dir/src/sub_one_image.cpp.o"
+  "/home/zx/桌面/test/camerasend/src/camera_udp/src/sub_one_image.cpp" "/home/zx/桌面/test/camerasend/build/camera_udp/CMakeFiles/cmerasend.dir/src/sub_one_image.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
