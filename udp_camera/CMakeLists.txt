@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
-SET( CMAKE_CXX_FLAGS "-std=c++11 -O3")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+#SET( CMAKE_CXX_FLAGS "-std=c++11 -O3")
 
 project(myrtt)
 find_package(OpenCV REQUIRED)

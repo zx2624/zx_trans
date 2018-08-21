@@ -33,29 +33,58 @@ Mat image_result;
 int socket_vedio;
 sockaddr_in m_servaddr;
 Mat image_vedio;
-char* name2="result";
-char* name1="result22";
+Mat imshoww;
+sockaddr_in client;
+socklen_t len;
+
+// char* name2="result";
+// char* name1="result22";
 
 void thread11(){
-	cout<<"1111111111111111"<<endl;
 	while(1){
-		if(!image_result.empty()){
-			imshow(name2,image_result);
-			waitKey(4);
-		}
+		// cout<<"thread11"<<endl;
+		cout << "Input the video channel: ";
+		char a;
+		cin>>a;
+		sendto(socket_vedio, &a, 2, 0, (const sockaddr*)& client, len);
 		usleep(100000);
-
 	}
 }
 void thread22(){
-	cout<<"222222222222"<<endl;
+
 	while(1){
-		if(!image_vedio.empty()){
-			imshow(name1,image_vedio);
-			waitKey(4);
+//		cout<<"222222222222"<<endl;
+
+		char buf[65536];
+		std::vector<uchar> decode;
+		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+		int pos = 0;
+		while (pos < n-1)
+		{
+			decode.push_back(buf[pos++]);//存入vector
 		}
-		usleep(100000);
+		if(buf[n-1]==0){
+			image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码}
+//			cout<<image_result.rows<<"  result 2222   "<<image_result.cols<<endl;
+
+		}if(buf[n-1]==1){
+			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+//			cout<<image_vedio.rows<<"   vedio  11111   "<<image_vedio.cols<<endl;
+
+		}
+		imshoww.create(image_vedio.rows+image_result.rows+3,image_vedio.cols+image_result.cols+3,CV_8UC3);
+
+		if(!image_vedio.empty()){
+			image_vedio.copyTo(imshoww(Rect(0,0,image_vedio.cols,image_vedio.rows)));
+		}
+		if(!image_result.empty()){
+			image_result.copyTo(imshoww(Rect(image_vedio.cols+3,0,image_result.cols,image_result.rows)));
+		}
+
+		imshow("vedio-result",imshoww);
+		waitKey(4);
 	}
+	close(socket_vedio);
 }
 int main(int argc, char** argv)
 {
@@ -79,47 +108,15 @@ int main(int argc, char** argv)
 	bind(socket_vedio, (sockaddr*)&m_servaddr, sizeof(m_servaddr));//绑定套接字
 	int timeout=10;
 	//	setsockopt(socket_vedio,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(int));
-	//	std::thread thread1{thread11};
-	//	std::thread thread2{thread22};
-	Mat imshoww;
+	std::thread thread1{thread11};
+	std::thread thread2{thread22};
 	//	imshoww.create(960+480+3,1280+640+3,CV_8UC3);
+	thread1.join();
+	thread2.join();
 
 	namedWindow("vedio-result",CV_WINDOW_NORMAL);
-	sockaddr_in client;
-	socklen_t len;
-	while(1){
-		char buf[65536];
-		std::vector<uchar> decode;
-		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-		int pos = 0;
-		while (pos < n-1)
-		{
-			decode.push_back(buf[pos++]);//存入vector
-		}
-		if(buf[n-1]==0){
-			image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码}
-			cout<<image_result.rows<<"  result 2222   "<<image_result.cols<<endl;
 
-		}if(buf[n-1]==1){
-			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-			cout<<image_vedio.rows<<"   vedio  11111   "<<image_vedio.cols<<endl;
 
-		}
-		imshoww.create(image_vedio.rows+image_result.rows+3,image_vedio.cols+image_result.cols+3,CV_8UC3);
-
-		if(!image_vedio.empty()){
-			image_vedio.copyTo(imshoww(Rect(0,0,image_vedio.cols,image_vedio.rows)));
-		}
-		if(!image_result.empty()){
-			image_result.copyTo(imshoww(Rect(image_vedio.cols+3,0,image_result.cols,image_result.rows)));
-		}
-
-		imshow("vedio-result",imshoww);
-		waitKey(4);
-	}
-	close(socket_vedio);
-	//	thread1.join();
-	//	thread2.join();
 
 	return 0;
 }

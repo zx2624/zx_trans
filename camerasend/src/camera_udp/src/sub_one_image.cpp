@@ -25,7 +25,7 @@
 using namespace std;
 using namespace cv;
 #define PORT 6666
-#define IP "192.168.199.204"
+#define IP "10.62.144.239"
 //std::vector<cv::Mat> srcImage;
 std::mutex mtx;
 sockaddr_in server_vedio;
@@ -35,42 +35,44 @@ Mat image_result;
 Mat image_vedio;
 uchar encodeImg[65535];
 double lasttime=-1;
-class ImageDeal
-{
-	ros::NodeHandle& _nh;
-	ros::Subscriber _sub;
+char flag_channel;
 
-public:
-	cv::Mat _srcImage;
-	ImageDeal(ros::NodeHandle& nh):_nh(nh)
-	{
-		_sub=_nh.subscribe("/image", 1, &ImageDeal::imageCb, this);
-
-	}
-	~ImageDeal()
-	{
-		cv::destroyAllWindows();
-	}
-
-	void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
-	{
-		mtx.lock();
-		_srcImage = (cv_bridge::toCvShare(orgmsg)->image).clone();
-		mtx.unlock();
-		//		if(_srcImage.empty())
-		//			std::cout << "Can't get image!" << std::endl;
-		//		else
-		//			std::cout << "Get one image!" << std::endl;
-	}
-};
+socklen_t len;
+//class ImageDeal
+//{
+//	ros::NodeHandle& _nh;
+//	ros::Subscriber _sub;
+//
+//public:
+//	cv::Mat _srcImage;
+//	ImageDeal(ros::NodeHandle& nh):_nh(nh)
+//	{
+//		_sub=_nh.subscribe("/image", 1, &ImageDeal::imageCb, this);
+//
+//	}
+//	~ImageDeal()
+//	{
+//		cv::destroyAllWindows();
+//	}
+//
+//	void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
+//	{
+//		mtx.lock();
+//		_srcImage = (cv_bridge::toCvShare(orgmsg)->image).clone();
+//		mtx.unlock();
+//		//		if(_srcImage.empty())
+//		//			std::cout << "Can't get image!" << std::endl;
+//		//		else
+//		//			std::cout << "Get one image!" << std::endl;
+//	}
+//};
 void thread11(){
 	while(1){
-
 		double timenow=ros::Time::now().toSec();
 
-		cout<<"1111111111"<<endl;
+		// cout<<"1111111111"<<endl;
 		capture>>image_result;
-		if(lasttime!=-1&&abs(timenow-lasttime)<5){
+		if(lasttime!=-1&&abs(timenow-lasttime)<0.1){//控制发送间隔，
 //			cout<<"?????????????"<<endl;
 //			lasttime=timenow;
 			continue;
@@ -100,6 +102,18 @@ void thread11(){
 		}
 //		usleep(100000);
 
+	}
+}
+void thread33(){
+	//recv
+	while(1)
+	{
+		char buf[1024];
+		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& server_vedio, &len);//接受缓存
+		if (n > 0) {
+			flag_channel = buf[0];
+			cout << "read command from server: " << flag_channel << endl;
+		}
 	}
 }
 void thread22(const sensor_msgs::ImageConstPtr& orgmsg){
@@ -132,7 +146,7 @@ int main(int argc, char ** argv)
 	ros::NodeHandle nh;
 
 
-	ImageDeal imgd(nh);
+//	ImageDeal imgd(nh);
 	int count = 0;
 	cv::Mat srcImage;
 	if ((socket_vedio = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
@@ -151,45 +165,10 @@ int main(int argc, char ** argv)
 	ros::Subscriber _sub;
 	_sub=nh.subscribe("/image", 1,thread22);
 	std::thread thread1{thread11};
+	std::thread thread3{thread33};
 	//	std::thread thread2{thread22};
 	//	thread1.join();
 	ros::spin();
 	close(socket_vedio);
-	//	while (ros::ok())
-	//	{
-	//		ros::spinOnce();
-	//		mtx.lock();
-	//		srcImage = imgd._srcImage.clone();
-	//		mtx.unlock();
-	////		srcImage=srcImage.resize(640,480);
-	////		cout<<srcImage.rows<<"  "<<srcImage.cols<<endl;
-	//
-	////		capture >> srcImage;//读入图片
-	//		if(!srcImage.empty())
-	//		{
-	//
-	//
-	//
-	//			std::vector<uchar> data_encode;
-	//			std::vector<int> quality;
-	//			quality.push_back(CV_IMWRITE_JPEG_QUALITY);
-	//			quality.push_back(50);//进行50%的压缩
-	//			imencode(".jpg", srcImage, data_encode,quality);//将图像编码
-	//			char encodeImg[65535];
-	//
-	//			int nSize = data_encode.size();
-	//			for (int i = 0; i < nSize; i++)
-	//			{
-	//				encodeImg[i] = data_encode[i];
-	//			}
-	//			cout<<"..... "<<nSize<<endl;
-	//			sendto(socket_vedio, encodeImg, nSize, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-	//			memset(&encodeImg, 0, sizeof(encodeImg));  //初始化结构体
-	//
-	////			++count;
-	////			cv::imshow("sub_image", srcImage);
-	////			cv::waitKey(100);
-	//		}
-	//		usleep(50000);
-	//	}
+
 }
