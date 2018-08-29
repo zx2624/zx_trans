@@ -1,6 +1,7 @@
 # CMake generated Testfile for 
-# Source directory: /usr/src/gtest
-# Build directory: /home/zx/桌面/test/camerasend/build/gtest
+# Source directory: /usr/src/gmock
+# Build directory: /home/zx/test/camerasend/build/gtest
 # 
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
+subdirs(gtest)

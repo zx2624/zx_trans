@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zx/桌面/test/camerasend/src
+CMAKE_SOURCE_DIR = /home/zx/test/camerasend/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zx/桌面/test/camerasend/build
+CMAKE_BINARY_DIR = /home/zx/test/camerasend/build
 
 # Utility rule file for sensor_msgs_generate_messages_py.
 
@@ -63,10 +63,10 @@ camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/build: sensor_msgs_ge
 .PHONY : camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/build
 
 camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/clean:
-	cd /home/zx/桌面/test/camerasend/build/camera_udp && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_py.dir/cmake_clean.cmake
+	cd /home/zx/test/camerasend/build/camera_udp && $(CMAKE_COMMAND) -P CMakeFiles/sensor_msgs_generate_messages_py.dir/cmake_clean.cmake
 .PHONY : camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/clean
 
 camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/depend:
-	cd /home/zx/桌面/test/camerasend/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zx/桌面/test/camerasend/src /home/zx/桌面/test/camerasend/src/camera_udp /home/zx/桌面/test/camerasend/build /home/zx/桌面/test/camerasend/build/camera_udp /home/zx/桌面/test/camerasend/build/camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/zx/test/camerasend/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zx/test/camerasend/src /home/zx/test/camerasend/src/camera_udp /home/zx/test/camerasend/build /home/zx/test/camerasend/build/camera_udp /home/zx/test/camerasend/build/camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : camera_udp/CMakeFiles/sensor_msgs_generate_messages_py.dir/depend
 

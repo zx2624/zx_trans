@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <node pkg="camera_udp" name="cmerasend" type="cmerasend" output="screen">
+        <param name="frame_id" value="base_link" />
+  </node>
+
+  <node pkg="screen_cap" name="t.py" type="t.py" output="screen">
+        <param name="frame_id" value="base_link" />
+  </node>
+
+</launch>

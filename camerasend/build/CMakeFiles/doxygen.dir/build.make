@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/zx/桌面/test/camerasend/src
+CMAKE_SOURCE_DIR = /home/zx/test/camerasend/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/zx/桌面/test/camerasend/build
+CMAKE_BINARY_DIR = /home/zx/test/camerasend/build
 
 # Utility rule file for doxygen.
 
@@ -67,6 +67,6 @@ CMakeFiles/doxygen.dir/clean:
 .PHONY : CMakeFiles/doxygen.dir/clean
 
 CMakeFiles/doxygen.dir/depend:
-	cd /home/zx/桌面/test/camerasend/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zx/桌面/test/camerasend/src /home/zx/桌面/test/camerasend/src /home/zx/桌面/test/camerasend/build /home/zx/桌面/test/camerasend/build /home/zx/桌面/test/camerasend/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/zx/test/camerasend/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/zx/test/camerasend/src /home/zx/test/camerasend/src /home/zx/test/camerasend/build /home/zx/test/camerasend/build /home/zx/test/camerasend/build/CMakeFiles/doxygen.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/doxygen.dir/depend
 

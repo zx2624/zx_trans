@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/cmerasend.dir/src/sub_one_image.cpp.o"
-  "/home/zx/桌面/test/camerasend/devel/lib/camera_udp/cmerasend.pdb"
-  "/home/zx/桌面/test/camerasend/devel/lib/camera_udp/cmerasend"
+  "/home/zx/test/camerasend/devel/lib/camera_udp/cmerasend.pdb"
+  "/home/zx/test/camerasend/devel/lib/camera_udp/cmerasend"
 )
 
 # Per-language clean rules from dependency scanning.

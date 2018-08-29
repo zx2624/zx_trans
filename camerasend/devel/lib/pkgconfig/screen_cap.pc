@@ -1,0 +1,8 @@
+prefix=/home/zx/test/camerasend/devel
+
+Name: screen_cap
+Description: Description of screen_cap
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/zx/test/camerasend/devel/lib 
+Requires: 
