@@ -1,4 +1,4 @@
-# Install script for directory: /home/zx/桌面/test/udp_camera
+# Install script for directory: /home/tb/Desktop/udp_camera
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/zx/桌面/test/udp_camera/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/tb/Desktop/udp_camera/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

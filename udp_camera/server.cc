@@ -22,6 +22,7 @@
 #include <fcntl.h>
 #include <fcntl.h>
 #include <thread>
+#include <mutex>
 using namespace cv;
 using namespace std;
 
@@ -29,7 +30,6 @@ using namespace std;
 int socket_result;
 sockaddr_in addr_result;
 Mat image_result;
-
 int socket_vedio;
 sockaddr_in m_servaddr;
 Mat image_vedio;
@@ -39,8 +39,12 @@ socklen_t len;
 
 sockaddr_in client_result;
 socklen_t len_result;
-// char* name2="result";
-// char* name1="result22";
+ char* name2="result";
+ char* name1="result22";
+ std::mutex mtx_0;
+ std::mutex mtx_1;
+// namedWindow(name2,CV_WINDOW_NORMAL);
+// namedWindow(name1,CV_WINDOW_NORMAL);
 
 void thread11(){
 	while(1){
@@ -53,7 +57,6 @@ void thread11(){
 	}
 }
 void thread22(){
-
 	while(1){
 		cout<<"regular......."<<endl;
 
@@ -65,13 +68,15 @@ void thread22(){
 		{
 			decode.push_back(buf[pos++]);//存入vector
 		}
-		imshoww = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-		if(!imshoww.empty()){
+                mtx_0.lock();
+                image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+                mtx_0.unlock();
+                if(!image_vedio.empty()){
 			cout<<"got image ..  "<<endl;
-		imshow("vedio-result",imshoww);
-		waitKey(4);
+//                imshow("result22",imshoww);
+//		waitKey(4);
 		}else{
-			cout<<"got no image .."<<endl;
+			//cout<<"got no image .."<<endl;
 		}
 //		if(buf[n-1]==0){
 //			image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码}
@@ -107,11 +112,13 @@ void resultReceive(){
 		{
 			decode.push_back(buf[pos++]);//存入vector
 		}
-		img = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+                mtx_1.lock();
+                image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+                mtx_1.unlock();
 		if(!img.empty()){
-			cout<<"got image ..  "<<endl;
-		imshow("anatoer-test",img);
-		waitKey(4);
+			cout<<"got image result ..  "<<endl;
+//                imshow("result",img);
+//                waitKey(4);
 		}else{
 			cout<<"got no image .."<<endl;
 		}
@@ -125,8 +132,9 @@ int main(int argc, char** argv)
 	//
 	//    SOCKET socket_vedio;
 	cout<<"all begins now"<<endl;
-	//	namedWindow(name2,CV_WINDOW_NORMAL);
-	//	namedWindow(name1,CV_WINDOW_NORMAL);
+        namedWindow("result",CV_WINDOW_NORMAL);
+
+        namedWindow("result22",CV_WINDOW_NORMAL);
 
 	if ((socket_vedio = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
 	{
@@ -148,18 +156,33 @@ int main(int argc, char** argv)
 
 	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
 	addr_result.sin_family = AF_INET;           //设置通信方式
-	addr_result.sin_port = htons(PORT);         //设置端口号
+	addr_result.sin_port = htons(9999);         //设置端口号
 	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
 
 	std::thread thread1{thread11};
 	std::thread thread2{thread22};
-	std::thread thread3{resultReceive};
+        std::thread thread3{resultReceive};
 	//	imshoww.create(960+480+3,1280+640+3,CV_8UC3);
+        while(1){
+            if(!image_vedio.empty()){
+            mtx_0.lock();
+            imshow("result",image_vedio);
+            mtx_0.unlock();
+            }
+            if(!image_result.empty()){
+            mtx_1.lock();
+            imshow("result22",image_result);
+            mtx_1.unlock();
+            }
+            waitKey(3);
+            usleep(100000);
+            cout<<"testignlllll"<<endl;
+        }
 	thread1.join();
 	thread2.join();
-	thread3.join();
+        thread3.join();
 
-	namedWindow("vedio-result",CV_WINDOW_NORMAL);
+        //namedWindow("vedio-result",CV_WINDOW_NORMAL);
 
 
 

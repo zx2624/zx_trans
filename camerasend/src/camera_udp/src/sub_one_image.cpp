@@ -25,7 +25,7 @@
 using namespace std;
 using namespace cv;
 #define PORT 6666
-#define IP "192.168.1.129"
+#define IP "192.168.0.109"
 //std::vector<cv::Mat> srcImage;
 std::mutex mtx_0;
 std::mutex mtx_1;
@@ -172,14 +172,14 @@ void process(){
 }
 void sendResult(){
 	while(1){
-		if(!image_0.empty()){//!imgsend.empty()
+		if(!image_2.empty()){//!imgsend.empty()
 			std::vector<uchar> data_encode;
 			std::vector<int> quality;
 			quality.push_back(CV_IMWRITE_JPEG_QUALITY);
 			quality.push_back(10);//进行50%的压缩
-			mtx_0.lock();
-			imencode(".jpg", image_0, data_encode,quality);//将图像编码
-			mtx_0.unlock();
+			mtx_2.lock();
+			imencode(".jpg", image_2, data_encode,quality);//将图像编码
+			mtx_2.unlock();
 			int nSize=data_encode.size();
 
 			cout<<"size is "<<nSize<<endl;
@@ -214,7 +214,7 @@ int main(int argc, char ** argv)
 	}
 	memset(&server_vedio, 0, sizeof(server_vedio));  //初始化结构体
 	server_vedio.sin_family = AF_INET;           //设置通信方式
-	server_vedio.sin_port = htons(PORT);         //设置端口号
+//	server_vedio.sin_port = htons(PORT);         //设置端口号
 	server_vedio.sin_addr.s_addr = inet_addr(IP);
 	server_vedio.sin_port = htons(6666);//设置需要发送的IP和端口号
 	bind(socket_vedio, (sockaddr*)&server_vedio, sizeof(server_vedio));//绑定端口号
@@ -227,7 +227,7 @@ int main(int argc, char ** argv)
 	}
 	memset(&socket_add_result, 0, sizeof(socket_add_result));  //初始化结构体
 	socket_add_result.sin_family = AF_INET;           //设置通信方式
-	socket_add_result.sin_port = htons(PORT);         //设置端口号
+//	socket_add_result.sin_port = htons(PORT);         //设置端口号
 	socket_add_result.sin_addr.s_addr = inet_addr(IP);
 	socket_add_result.sin_port = htons(9999);//设置需要发送的IP和端口号
 	bind(socket_result, (sockaddr*)&socket_add_result, sizeof(socket_add_result));//绑定端口号
