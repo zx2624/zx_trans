@@ -37,6 +37,8 @@ Mat imshoww;
 sockaddr_in client;
 socklen_t len;
 
+sockaddr_in client_result;
+socklen_t len_result;
 // char* name2="result";
 // char* name1="result22";
 
@@ -53,7 +55,7 @@ void thread11(){
 void thread22(){
 
 	while(1){
-		cout<<"222222222222"<<endl;
+		cout<<"regular......."<<endl;
 
 		char buf[65536];
 		std::vector<uchar> decode;
@@ -92,6 +94,30 @@ void thread22(){
 	}
 	close(socket_vedio);
 }
+
+void resultReceive(){
+	while(1){
+		cout<<"result ---------------"<<endl;
+		Mat img;
+		char buf[65536];
+		std::vector<uchar> decode;
+		int n = recvfrom(socket_result, buf, sizeof(buf), 0,(sockaddr *)& client_result,&len_result);//接受缓存
+		int pos = 0;
+		while (pos < n)
+		{
+			decode.push_back(buf[pos++]);//存入vector
+		}
+		img = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+		if(!img.empty()){
+			cout<<"got image ..  "<<endl;
+		imshow("anatoer-test",img);
+		waitKey(4);
+		}else{
+			cout<<"got no image .."<<endl;
+		}
+	}
+	close(socket_result);
+}
 int main(int argc, char** argv)
 {
 	//    WSADATA wsaData;
@@ -112,13 +138,26 @@ int main(int argc, char** argv)
 	m_servaddr.sin_family = AF_INET;           //设置通信方式
 	m_servaddr.sin_port = htons(PORT);         //设置端口号
 	bind(socket_vedio, (sockaddr*)&m_servaddr, sizeof(m_servaddr));//绑定套接字
-	int timeout=10;
-	//	setsockopt(socket_vedio,SOL_SOCKET,SO_RCVTIMEO,(char *)&timeout,sizeof(int));
+
+
+	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
+	{
+		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
+		return -1;
+	}
+
+	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
+	addr_result.sin_family = AF_INET;           //设置通信方式
+	addr_result.sin_port = htons(PORT);         //设置端口号
+	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
+
 	std::thread thread1{thread11};
 	std::thread thread2{thread22};
+	std::thread thread3{resultReceive};
 	//	imshoww.create(960+480+3,1280+640+3,CV_8UC3);
 	thread1.join();
 	thread2.join();
+	thread3.join();
 
 	namedWindow("vedio-result",CV_WINDOW_NORMAL);
 

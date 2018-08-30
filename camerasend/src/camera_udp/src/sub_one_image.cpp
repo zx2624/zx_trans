@@ -32,6 +32,10 @@ std::mutex mtx_1;
 std::mutex mtx_2;
 sockaddr_in server_vedio;
 int socket_vedio;
+
+sockaddr_in socket_add_result;
+int socket_result;
+
 VideoCapture capture(0);//打开摄像头
 Mat image_0,image_1,image_2;
 uchar encodeImg[6553555];
@@ -166,6 +170,34 @@ void process(){
 
 
 }
+void sendResult(){
+	while(1){
+		if(!image_0.empty()){//!imgsend.empty()
+			std::vector<uchar> data_encode;
+			std::vector<int> quality;
+			quality.push_back(CV_IMWRITE_JPEG_QUALITY);
+			quality.push_back(10);//进行50%的压缩
+			mtx_0.lock();
+			imencode(".jpg", image_0, data_encode,quality);//将图像编码
+			mtx_0.unlock();
+			int nSize=data_encode.size();
+
+			cout<<"size is "<<nSize<<endl;
+			for (int i = 0; i < nSize; i++)
+			{
+				encodeImg[i] = data_encode[i];
+//				cout<<i<<"   "<<nSize<<endl;
+			}
+			sendto(socket_result, encodeImg, nSize, 0, (const sockaddr*)& socket_add_result, sizeof(socket_add_result));
+			memset(&encodeImg, 0, sizeof(encodeImg));  //初始化结构体
+//			imshow("rsult",imgsend);
+//			waitKey(5);
+		}
+		sleep(1);
+	}
+
+
+}
 int main(int argc, char ** argv)
 {
 	ros::init(argc, argv, "sub_one_image");
@@ -188,12 +220,26 @@ int main(int argc, char ** argv)
 	bind(socket_vedio, (sockaddr*)&server_vedio, sizeof(server_vedio));//绑定端口号
 
 
+	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
+	{
+		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
+		return -1;
+	}
+	memset(&socket_add_result, 0, sizeof(socket_add_result));  //初始化结构体
+	socket_add_result.sin_family = AF_INET;           //设置通信方式
+	socket_add_result.sin_port = htons(PORT);         //设置端口号
+	socket_add_result.sin_addr.s_addr = inet_addr(IP);
+	socket_add_result.sin_port = htons(9999);//设置需要发送的IP和端口号
+	bind(socket_result, (sockaddr*)&socket_add_result, sizeof(socket_add_result));//绑定端口号
+
+
 	ros::Subscriber _sub;
 	_sub=nh.subscribe("/image", 1,thread22);
 	ros::Subscriber sub_scree = nh.subscribe("screen_image_topic", 1, imageCb);
 	std::thread thread1{thread11};
 	std::thread thread3{thread33};//接收命令线程
 	std::thread thread4{process};//整体处理发送线程
+	std::thread thread5{sendResult};
 	//	thread1.join();
 	ros::spin();
 	close(socket_vedio);
