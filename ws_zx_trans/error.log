@@ -1,0 +1,7 @@
+2018/09/03 16:47:17 [Warning] Core: V2Ray v3.26 started
+2018/09/03 19:09:23 [Warning] failed to handler mux client connection > Proxy|VMess|Outbound: failed to find an available destination > Retry: [Transport|Internet|mKCP: failed to dial to dest: dial udp 66.98.116.251:8088: connect: network is unreachable > dial udp 66.98.116.251:8088: connect: network is unreachable] > Retry: all retry attempts failed
+2018/09/03 20:05:01 [Warning] App|DNS: failed to lookup IPs for domain clients4.google.com. > lookup clients4.google.com. on 127.0.1.1:53: read udp 127.0.0.1:57500->127.0.1.1:53: i/o timeout
+2018/09/03 20:05:48 [Warning] App|DNS: failed to lookup IPs for domain mtalk.google.com. > lookup mtalk.google.com. on 127.0.1.1:53: read udp 127.0.0.1:58413->127.0.1.1:53: i/o timeout
+2018/09/03 20:06:24 [Warning] App|DNS: failed to lookup IPs for domain play.google.com. > lookup play.google.com. on 127.0.1.1:53: read udp 127.0.0.1:52523->127.0.1.1:53: i/o timeout
+2018/09/03 20:09:36 [Warning] App|DNS: failed to lookup IPs for domain mtalk.google.com. > lookup mtalk.google.com. on 127.0.1.1:53: read udp 127.0.0.1:39758->127.0.1.1:53: i/o timeout
+2018/09/03 20:09:59 [Warning] App|DNS: failed to lookup IPs for domain clients4.google.com. > lookup clients4.google.com. on 127.0.1.1:53: server misbehaving

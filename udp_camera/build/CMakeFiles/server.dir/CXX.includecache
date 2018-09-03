@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/tb/Desktop/udp_camera/server.cc
+/home/zx/test/udp_camera/server.cc
 iostream
 -
 opencv2/opencv.hpp

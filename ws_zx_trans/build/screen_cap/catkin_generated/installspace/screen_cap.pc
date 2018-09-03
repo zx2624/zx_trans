@@ -1,0 +1,8 @@
+prefix=/home/zx/test/ws_zx_trans/install
+
+Name: screen_cap
+Description: Description of screen_cap
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/zx/test/ws_zx_trans/install/lib 
+Requires: 

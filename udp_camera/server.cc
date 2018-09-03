@@ -26,7 +26,7 @@
 using namespace cv;
 using namespace std;
 
-#define PORT 6666
+#define PORT 6667
 int socket_result;
 sockaddr_in addr_result;
 Mat image_result;
@@ -39,14 +39,14 @@ socklen_t len;
 
 sockaddr_in client_result;
 socklen_t len_result;
- char* name2="result";
- char* name1="result22";
- std::mutex mtx_0;
- std::mutex mtx_1;
+char* name2="result";
+char* name1="result22";
+std::mutex mtx_0;
+std::mutex mtx_1;
 // namedWindow(name2,CV_WINDOW_NORMAL);
 // namedWindow(name1,CV_WINDOW_NORMAL);
 
-void thread11(){
+void command(){
 	while(1){
 		// cout<<"thread11"<<endl;
 		cout << "Input the video channel: ";
@@ -56,7 +56,7 @@ void thread11(){
 		usleep(100000);
 	}
 }
-void thread22(){
+void receive(){
 	while(1){
 		cout<<"regular......."<<endl;
 
@@ -68,33 +68,33 @@ void thread22(){
 		{
 			decode.push_back(buf[pos++]);//存入vector
 		}
-                mtx_0.lock();
-                image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-                mtx_0.unlock();
-                if(!image_vedio.empty()){
+		mtx_0.lock();
+		image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+		mtx_0.unlock();
+		if(!image_vedio.empty()){
 			cout<<"got image ..  "<<endl;
-//                imshow("result22",imshoww);
-//		waitKey(4);
+			//                imshow("result22",imshoww);
+			//		waitKey(4);
 		}else{
 			//cout<<"got no image .."<<endl;
 		}
-//		if(buf[n-1]==0){
-//			image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码}
-////			cout<<image_result.rows<<"  result 2222   "<<image_result.cols<<endl;
-//
-//		}if(buf[n-1]==1){
-//			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-////			cout<<image_vedio.rows<<"   vedio  11111   "<<image_vedio.cols<<endl;
-//
-//		}
-//		imshoww.create(image_vedio.rows+image_result.rows+3,image_vedio.cols+image_result.cols+3,CV_8UC3);
-//
-//		if(!image_vedio.empty()){
-//			image_vedio.copyTo(imshoww(Rect(0,0,image_vedio.cols,image_vedio.rows)));
-//		}
-//		if(!image_result.empty()){
-//			image_result.copyTo(imshoww(Rect(image_vedio.cols+3,0,image_result.cols,image_result.rows)));
-//		}
+		//		if(buf[n-1]==0){
+		//			image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);//图像解码}
+		////			cout<<image_result.rows<<"  result 2222   "<<image_result.cols<<endl;
+		//
+		//		}if(buf[n-1]==1){
+		//			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+		////			cout<<image_vedio.rows<<"   vedio  11111   "<<image_vedio.cols<<endl;
+		//
+		//		}
+		//		imshoww.create(image_vedio.rows+image_result.rows+3,image_vedio.cols+image_result.cols+3,CV_8UC3);
+		//
+		//		if(!image_vedio.empty()){
+		//			image_vedio.copyTo(imshoww(Rect(0,0,image_vedio.cols,image_vedio.rows)));
+		//		}
+		//		if(!image_result.empty()){
+		//			image_result.copyTo(imshoww(Rect(image_vedio.cols+3,0,image_result.cols,image_result.rows)));
+		//		}
 
 	}
 	close(socket_vedio);
@@ -112,15 +112,14 @@ void resultReceive(){
 		{
 			decode.push_back(buf[pos++]);//存入vector
 		}
-                mtx_1.lock();
-                image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-                mtx_1.unlock();
+		mtx_1.lock();
+		image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+		mtx_1.unlock();
 		if(!img.empty()){
-			cout<<"got image result ..  "<<endl;
-//                imshow("result",img);
-//                waitKey(4);
+//			cout<<"got image result ..  "<<endl;
+
 		}else{
-			cout<<"got no image .."<<endl;
+//			cout<<"got no image .."<<endl;
 		}
 	}
 	close(socket_result);
@@ -132,9 +131,9 @@ int main(int argc, char** argv)
 	//
 	//    SOCKET socket_vedio;
 	cout<<"all begins now"<<endl;
-        namedWindow("result",CV_WINDOW_NORMAL);
+	namedWindow("result",CV_WINDOW_NORMAL);
 
-        namedWindow("result22",CV_WINDOW_NORMAL);
+	namedWindow("result22",CV_WINDOW_NORMAL);
 
 	if ((socket_vedio = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
 	{
@@ -159,30 +158,29 @@ int main(int argc, char** argv)
 	addr_result.sin_port = htons(9999);         //设置端口号
 	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
 
-	std::thread thread1{thread11};
-	std::thread thread2{thread22};
-        std::thread thread3{resultReceive};
+	std::thread thread_command{command};
+	std::thread thread_receive{receive};
+//	std::thread thread3{resultReceive};
 	//	imshoww.create(960+480+3,1280+640+3,CV_8UC3);
-        while(1){
-            if(!image_vedio.empty()){
-            mtx_0.lock();
-            imshow("result",image_vedio);
-            mtx_0.unlock();
-            }
-            if(!image_result.empty()){
-            mtx_1.lock();
-            imshow("result22",image_result);
-            mtx_1.unlock();
-            }
-            waitKey(3);
-            usleep(100000);
-            cout<<"testignlllll"<<endl;
-        }
-	thread1.join();
-	thread2.join();
-        thread3.join();
+	while(1){
+		if(!image_vedio.empty()){
+			mtx_0.lock();
+			imshow("视频回传",image_vedio);
+			mtx_0.unlock();
+		}
+		if(!image_result.empty()){
+			mtx_1.lock();
+			imshow("检测结果",image_result);
+			mtx_1.unlock();
+		}
+		waitKey(3);
+		usleep(100000);
+	}
+	thread_command.join();
+	thread_receive.join();
+//	thread3.join();
 
-        //namedWindow("vedio-result",CV_WINDOW_NORMAL);
+	//namedWindow("vedio-result",CV_WINDOW_NORMAL);
 
 
 

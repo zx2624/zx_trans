@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/tb/Desktop/udp_camera/server.cc" "/home/tb/Desktop/udp_camera/build/CMakeFiles/server.dir/server.cc.o"
+  "/home/zx/test/udp_camera/server.cc" "/home/zx/test/udp_camera/build/CMakeFiles/server.dir/server.cc.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
