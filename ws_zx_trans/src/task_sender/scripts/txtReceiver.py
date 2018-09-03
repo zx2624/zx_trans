@@ -21,9 +21,9 @@ import roslib
 def socket_service():
     rospy.init_node('receiver')
     port = rospy.get_param('~port')
-    ip = rospy.get_param('~selip')
-    print "============port=========%d" % port  
-    print "============ip===========%r" % ip
+    ip = rospy.get_param('~selfip')
+    print "============port==sdfsdf=======%d" % port  
+    print "============ip=====sdfsdf======%r" % ip
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -54,7 +54,7 @@ def deal_data(conn, addr):
             # new_filename = os.path.join('./', + fn)
 
             recvd_size = 0  # 定义已接收文件的大小
-            newname = "/home/zx/test/ws_zx_trans/src/task_sender/scripts/"+fn
+            newname = '/home/zx/kyxz/KYXZ2018A.txt'
             print('file new name is {0}, filesize is {1}'.format(newname,
                                                                  filesize))
             fp = open(newname, 'wb')

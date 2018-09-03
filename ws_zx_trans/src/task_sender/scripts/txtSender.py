@@ -31,7 +31,7 @@ def socket_client():
     ip = rospy.get_param('ip')
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     while s.connect_ex((ip, port)) != 0:
-        print "wating for server ..."
+        print "wating for vehicle to open server ..."
         time.sleep(1)
 
 
@@ -57,6 +57,7 @@ def socket_client():
                 s.send(data)
         s.close()
         break
+    sys.exit('sending over')
 
 
 if __name__ == '__main__':
