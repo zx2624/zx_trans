@@ -8,22 +8,20 @@
 <!--  视频接收，</-->
 
   <node pkg="vedio_recv" name="vedio_recv" type="vedio_recv" output="screen">
-        <param name="frame_id" value="base_link" />
 	<param name="port2" type="int" value="9999" />
 	<param name="port" type="int" value="6667" />
   </node>
 
 
-<!--  任务文件发送，参数需要进文件里改  主要是ip port</-->
+<!--  任务文件发送   port</-->
   <node pkg="task_sender" name="txtSender.py" type="txtSender.py" output="screen">
-        <param name="frame_id" value="base_link" />
         <param name="port" value="6666" />
+	<param name="path" value="$(find task_sender)/taskfile/KYXZ2018A.txt" />
 
   </node>
 
 <!--  检测结果发送结果接收</-->
   <node pkg="tcp_server" name="tcp_server_node" type="tcp_server_node" output="screen">
-        <param name="frame_id" value="base_link" />
 	<param name="port" type="int" value="6668" />
   </node>
 
