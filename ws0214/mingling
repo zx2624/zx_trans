@@ -1,3 +1,0 @@
-catkin_make_isolated --force-cmake -G"Eclipse CDT4 - Unix Makefiles" --install
-
-
