@@ -6,6 +6,26 @@
 
 #IncludeRegexTransform: 
 
+/home/zx/test/ws_zx_trans/devel/include/detection_result/detection_result_msg.h
+string
+-
+vector
+-
+map
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+std_msgs/Header.h
+-
+sensor_msgs/Image.h
+-
+
 /home/zx/test/ws_zx_trans/src/camera_udp/src/sub_one_image.cpp
 iostream
 -
