@@ -23,3 +23,9 @@
 2018/09/04 00:03:25 [Warning] App|DNS: failed to lookup IPs for domain play.google.com. > lookup play.google.com. on 127.0.1.1:53: server misbehaving
 2018/09/04 00:18:27 [Warning] App|DNS: failed to lookup IPs for domain clients4.google.com. > lookup clients4.google.com. on 127.0.1.1:53: read udp 127.0.0.1:33247->127.0.1.1:53: i/o timeout
 2018/09/04 00:19:09 [Warning] App|DNS: failed to lookup IPs for domain mtalk.google.com. > lookup mtalk.google.com. on 127.0.1.1:53: read udp 127.0.0.1:41262->127.0.1.1:53: i/o timeout
+2018/09/04 00:45:57 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:52615->127.0.1.1:53: i/o timeout
+2018/09/04 00:46:28 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:43712->127.0.1.1:53: i/o timeout
+2018/09/04 00:47:00 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:37741->127.0.1.1:53: i/o timeout
+2018/09/04 00:47:35 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:60233->127.0.1.1:53: i/o timeout
+2018/09/04 00:48:13 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:42436->127.0.1.1:53: i/o timeout
+2018/09/04 00:48:59 [Warning] App|DNS: failed to lookup IPs for domain www.googleapis.com. > lookup www.googleapis.com. on 127.0.1.1:53: read udp 127.0.0.1:37532->127.0.1.1:53: i/o timeout

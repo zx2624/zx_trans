@@ -56,7 +56,7 @@ def deal_data(conn, addr):
             # new_filename = os.path.join('./', + fn)
 
             recvd_size = 0  # 定义已接收文件的大小
-            newname = path + 'KYXZ22018A.txt'
+            newname = path + 'KYXZ2018A.txt'
             print('file new name is {0}, filesize is {1}'.format(newname,
                                                                  filesize))
             fp = open(newname, 'wb')

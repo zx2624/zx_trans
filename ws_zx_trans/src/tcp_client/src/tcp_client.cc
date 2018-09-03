@@ -189,8 +189,8 @@ int main(int argc, char ** argv)
 	///连接服务器，成功返回0，错误返回-1
 	while(connect(sock_cli, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0 && ros::ok())
 	{
-		cout<<"wating server..."<<endl;
-		usleep(100000);
+		cout<<"from tcp_client node: wating server..."<<endl;
+		usleep(1000000);
 	}
 	printf("服务器连接成功\n");
 	ros::Subscriber detection_sub = nh.subscribe<detection_result::detection_result_msg>("detection_result",100,detetction_cb);

@@ -166,7 +166,6 @@ void process(){
 			//			imshow("rsult",imgsend);
 			//			waitKey(5);
 		}else{
-			cout<<"image empty,sending screen shot instead   ."<<endl;
 			if(!image_2.empty()){
 				std::vector<uchar> data_encode;
 				std::vector<int> quality;
