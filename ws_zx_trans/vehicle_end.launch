@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
 
-
-  <param name="ip" type="string" value="192.168.1.129" />
+<!--  此ip为视频发送的目标ip  </-->
+  <param name="ip" type="string" value="192.168.1.119" />
 
 
 <!--  视频传输</-->
@@ -17,8 +17,10 @@
         <param name="frame_id" value="base_link" />
   </node>
 
-<!--  任务文件接收，参数需要进文件里改  主要是ip port</-->
+<!--  selfip 是本机的ip  </-->
   <node pkg="task_sender" name="txtReceiver.py" type="txtReceiver.py" output="screen">
+        <param name="port" value="6666" type = "int" />
+        <param name="selfip" value="192.168.8.189" type = "string" />
         <param name="frame_id" value="base_link" />
   </node>
 

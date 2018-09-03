@@ -14,14 +14,20 @@ import time
 import sys
 import os
 import struct
+import roslib
 
 
 
 def socket_service():
+    rospy.init_node('receiver')
+    port = rospy.get_param('~port')
+    ip = rospy.get_param('~selip')
+    print "============port=========%d" % port  
+    print "============ip===========%r" % ip
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind(('192.168.1.102', 6666))
+        s.bind((ip, port))
         s.listen(10)
     except socket.error as msg:
         print(msg)
@@ -70,8 +76,10 @@ def deal_data(conn, addr):
 
 
 if __name__ == '__main__':
+    # rospy.init_node('receiver')
 	# global port 
 	# port = 6666
-	# port = rospy.get_param("port")
+	# port = rospy.get_param('~port' , 347)
 	# print "============port=========%d" % port
     socket_service()
+    # rospy.spin()
