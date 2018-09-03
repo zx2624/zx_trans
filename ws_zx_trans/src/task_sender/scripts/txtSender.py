@@ -38,7 +38,7 @@ def socket_client():
     print s.recv(1024)
 
     while 1:
-        filepath = raw_input('please input file path: ')
+        filepath = "/home/zx/test/ws_zx_trans/src/task_sender/KYXZ2018A.txt"
         if os.path.isfile(filepath):
             # 定义定义文件信息。128s表示文件名为128bytes长，l表示一个int或log文件类型，在此为文件大小
             fileinfo_size = struct.calcsize('128sl')

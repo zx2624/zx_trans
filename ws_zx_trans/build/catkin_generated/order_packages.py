@@ -2,4 +2,4 @@
 source_root_dir = "/home/zx/test/ws_zx_trans/src"
 whitelisted_packages = "".split(';') if "" != "" else []
 blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/home/zx/test/ws_zx_trans/devel;/opt/ros/kinetic".split(';') if "/home/zx/test/ws_zx_trans/devel;/opt/ros/kinetic" != "" else []
+underlay_workspaces = "/opt/ros/kinetic".split(';') if "/opt/ros/kinetic" != "" else []

@@ -2,7 +2,7 @@
 <launch>
 
 
-  <param name="ip" type="string" value="192.168.10.10" />
+  <param name="ip" type="string" value="192.168.10.24" />
 
 
 <!--  视频接收，</-->
@@ -21,7 +21,7 @@
 
   </node>
 
-<!--  检测结果接收</-->
+<!--  检测结果发送结果接收</-->
   <node pkg="tcp_server" name="tcp_server_node" type="tcp_server_node" output="screen">
         <param name="frame_id" value="base_link" />
 	<param name="port" type="int" value="6668" />
