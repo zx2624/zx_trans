@@ -22,6 +22,7 @@ def socket_service():
     rospy.init_node('receiver')
     port = rospy.get_param('~port')
     ip = rospy.get_param('~selfip')
+    # print path
     print "============port==sdfsdf=======%d" % port  
     print "============ip=====sdfsdf======%r" % ip
     try:
@@ -44,6 +45,7 @@ def deal_data(conn, addr):
     print('Accept new connection from {0}'.format(addr))
     #conn.settimeout(500)
     conn.send('Hi, Welcome to the server!')
+    path = rospy.get_param('~path')
 
     if 1:
         fileinfo_size = struct.calcsize('128sl')
@@ -54,7 +56,7 @@ def deal_data(conn, addr):
             # new_filename = os.path.join('./', + fn)
 
             recvd_size = 0  # 定义已接收文件的大小
-            newname = '/home/zx/kyxz/KYXZ2018A.txt'
+            newname = path + 'KYXZ22018A.txt'
             print('file new name is {0}, filesize is {1}'.format(newname,
                                                                  filesize))
             fp = open(newname, 'wb')

@@ -12,6 +12,7 @@
         <param name="port" value="6666" type = "int" />
         <param name="selfip" value="192.168.10.102" type = "string" />
         <param name="frame_id" value="base_link" />
+	<param name="path" value="$(find task_sender)/taskfile/" />
   </node>
 
 

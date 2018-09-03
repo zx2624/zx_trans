@@ -21,3 +21,5 @@
 2018/09/03 23:46:34 [Warning] failed to handler mux client connection > Proxy|VMess|Outbound: failed to find an available destination > Retry: [Transport|Internet|mKCP: failed to dial to dest: dial udp 66.98.116.251:8088: connect: network is unreachable > dial udp 66.98.116.251:8088: connect: network is unreachable] > Retry: all retry attempts failed
 2018/09/04 00:01:43 [Warning] App|DNS: failed to lookup IPs for domain clients4.google.com. > lookup clients4.google.com. on 127.0.1.1:53: server misbehaving
 2018/09/04 00:03:25 [Warning] App|DNS: failed to lookup IPs for domain play.google.com. > lookup play.google.com. on 127.0.1.1:53: server misbehaving
+2018/09/04 00:18:27 [Warning] App|DNS: failed to lookup IPs for domain clients4.google.com. > lookup clients4.google.com. on 127.0.1.1:53: read udp 127.0.0.1:33247->127.0.1.1:53: i/o timeout
+2018/09/04 00:19:09 [Warning] App|DNS: failed to lookup IPs for domain mtalk.google.com. > lookup mtalk.google.com. on 127.0.1.1:53: read udp 127.0.0.1:41262->127.0.1.1:53: i/o timeout
