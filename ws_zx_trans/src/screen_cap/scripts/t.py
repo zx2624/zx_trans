@@ -28,7 +28,7 @@ def screen_cap():
     publisher = rospy.Publisher('screen_image_topic', Image, queue_size=10)
     i = 0
     while True:
-        # print "capture iing"
+        # print "capture iing"sldkfj;slkfd
         # capture computer screen
         img = ImageGrab.grab()
         # convert image to numpy array
