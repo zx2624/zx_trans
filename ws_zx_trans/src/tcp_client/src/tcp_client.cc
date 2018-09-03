@@ -20,7 +20,8 @@
 
 using namespace std;
 
-const int MYPORT=6668;
+int PORT=6668;
+string IP = "192.168.8.109";
 #define BUFFER_SIZE 655355
 int sock_cli;
 struct sockaddr_in servaddr;
@@ -29,7 +30,7 @@ vector<string> names{"YINBIDIAN_1","YINBIDIAN_2","ZHENCHA1_1","ZHENCHA1_2","ZHEN
 	"ZHENCHA2_2","XUNLUO1_1","XUNLUO1_2","XUNLUO2_1","XUNLUO2_2","XUNLUO3_1","XUNLUO3_2","XUNLUO4_1","XUNLUO4_2"};
 //char* SERVER_IP = "192.168.8.109";
 //char* SERVER_IP = "192.168.1.131";
-string SERVER_IP = "192.168.8.109";
+
 
 deque<detection_result::detection_result_msgConstPtr> msg_q;
 void float_to_uchar(float b, unsigned char* sendbuf){
@@ -173,17 +174,18 @@ int main(int argc, char ** argv)
 	ros::init(argc, argv, "tcp_client");
 	ros::NodeHandle nh;
 	ros::Publisher detection_pub = nh.advertise<detection_result::detection_result_msg>("detection_result",100);
-
+	ros::param::get("ip",IP);
+	ros::param::get("~port",PORT);
 
 	//定义sockfd
 	sock_cli = socket(AF_INET,SOCK_STREAM, 0);
 	///定义sockaddr_in
 	memset(&servaddr, 0, sizeof(servaddr));
 	servaddr.sin_family = AF_INET;
-	servaddr.sin_port = htons(MYPORT);  ///服务器端口
-	servaddr.sin_addr.s_addr = inet_addr(SERVER_IP.c_str());  ///服务器ip
+	servaddr.sin_port = htons(PORT);  ///服务器端口
+	servaddr.sin_addr.s_addr = inet_addr(IP.c_str());  ///服务器ip
 
-	printf("连接%s:%d\n",SERVER_IP,MYPORT);
+	printf("连接%s:%d\n",IP,PORT);
 	///连接服务器，成功返回0，错误返回-1
 	while(connect(sock_cli, (struct sockaddr *)&servaddr, sizeof(servaddr)) < 0 && ros::ok())
 	{

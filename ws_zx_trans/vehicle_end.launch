@@ -20,7 +20,7 @@
 <!--  selfip 是本机的ip  </-->
   <node pkg="task_sender" name="txtReceiver.py" type="txtReceiver.py" output="screen">
         <param name="port" value="6666" type = "int" />
-        <param name="selfip" value="192.168.8.189" type = "string" />
+        <param name="selfip" value="192.168.1.102" type = "string" />
         <param name="frame_id" value="base_link" />
   </node>
 
