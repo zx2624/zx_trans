@@ -255,7 +255,7 @@ int main(int argc, char ** argv)
 	//todo;获取侦察视频
 	ros::Subscriber sub_front=nh.subscribe("/image", 1,thread22);//前视摄像头数据
 	ros::Subscriber sub_screeb = nh.subscribe("screen_image_topic", 1, imageCb);//屏幕截图
-	ros::Subscriber sub_probe = nh.subscribe("screen_image_topic", 1, probecb);//侦察视频
+	ros::Subscriber sub_probe = nh.subscribe("laser_electronic_result", 1, probecb);//侦察视频
 	//	ros::
 	//	std::thread thread1{thread11};
 	std::thread thread3{thread33};//接收命令线程
