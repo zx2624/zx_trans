@@ -1,8 +1,0 @@
-prefix=/home/zx/test/ws_zx_trans/devel
-
-Name: detection_result
-Description: Description of detection_result
-Version: 0.0.0
-Cflags: -I/home/zx/test/ws_zx_trans/devel/include
-Libs: -L/home/zx/test/ws_zx_trans/devel/lib 
-Requires: sensor_msgs std_msgs

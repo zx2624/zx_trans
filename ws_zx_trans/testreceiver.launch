@@ -8,11 +8,11 @@
 
 
 <!--  任务文件接收，参数需要进文件里改  主要是ip port</-->
-  <node pkg="task_sender" name="txtReceiver.py" type="txtReceiver.py" output="screen">
+  <node pkg="task_sender" name="txtReceiver" type="txtReceiver.py" output="screen">
         <param name="port" value="6666" type = "int" />
         <param name="selfip" value="192.168.10.102" type = "string" />
         <param name="frame_id" value="base_link" />
-	<param name="path" value="$(find task_sender)/taskfile/" />
+
   </node>
 
 

@@ -23,8 +23,8 @@ def socket_service():
     port = rospy.get_param('~port')
     ip = rospy.get_param('~selfip')
     # print path
-    print "============port==sdfsdf=======%d" % port  
-    print "============ip=====sdfsdf======%r" % ip
+    print "============task file receiver port=========%d" % port  
+    print "============local ip ===========%r" % ip
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -45,7 +45,7 @@ def deal_data(conn, addr):
     print('Accept new connection from {0}'.format(addr))
     #conn.settimeout(500)
     conn.send('Hi, Welcome to the server!')
-    path = rospy.get_param('~path')
+    path = os.path.expanduser('~')
 
     if 1:
         fileinfo_size = struct.calcsize('128sl')
@@ -56,7 +56,7 @@ def deal_data(conn, addr):
             # new_filename = os.path.join('./', + fn)
 
             recvd_size = 0  # 定义已接收文件的大小
-            newname = path + 'KYXZ2018A.txt'
+            newname = path + '/taskfile/KYXZ2018A.txt'
             print('file new name is {0}, filesize is {1}'.format(newname,
                                                                  filesize))
             fp = open(newname, 'wb')
