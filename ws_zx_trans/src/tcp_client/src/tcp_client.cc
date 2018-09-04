@@ -16,18 +16,21 @@
 #include <opencv2/opencv.hpp>
 #include <cv_bridge/cv_bridge.h>
 #include <sensor_msgs/image_encodings.h>
+#include <fstream>
 #include "detection_result/detection_result_msg.h"
 
 using namespace std;
 
 int PORT=6668;
-string IP = "192.168.8.109";
+string IP = "192.168.8.119";
 #define BUFFER_SIZE 655355
 int sock_cli;
 struct sockaddr_in servaddr;
 std::mutex mtx_dq;
 vector<string> names{"YINBIDIAN_1","YINBIDIAN_2","ZHENCHA1_1","ZHENCHA1_2","ZHENCHA2_1",
 	"ZHENCHA2_2","XUNLUO1_1","XUNLUO1_2","XUNLUO2_1","XUNLUO2_2","XUNLUO3_1","XUNLUO3_2","XUNLUO4_1","XUNLUO4_2"};
+ofstream outfile;
+string udisk_dir;
 //char* SERVER_IP = "192.168.8.109";
 //char* SERVER_IP = "192.168.1.131";
 
@@ -41,9 +44,23 @@ void float_to_uchar(float b, unsigned char* sendbuf){
 	sendbuf[3] = (a & 0xff000000) >> 24;
 }
 void detetction_cb(const detection_result::detection_result_msgConstPtr& msg){
-
+	static int i =0;
 	mtx_dq.lock();
 	msg_q.push_back(msg);
+	cv::Mat image=(cv_bridge::toCvCopy(msg->imgdata,sensor_msgs::image_encodings::RGB8)->image);
+	stringstream str;
+	str<<udisk_dir<<msg->header.frame_id<<".jpg";
+	cv::imwrite(str.str(),image);
+	if(msg->header.frame_id == "ZHENCHA1_1"){
+		i++;
+		outfile<<"ZHENCHA( "<<msg->longitude<<" "<<msg->latitude<<") "<<msg->altitude<<endl;
+	}
+	if(msg->header.frame_id == "ZHENCHA2_1"){
+		i++;
+		outfile<<"ZHENCHA( "<<msg->longitude<<" "<<msg->latitude<<")"<<msg->altitude<<endl;
+	}
+	if(i == 2)
+		outfile.close();
 	mtx_dq.unlock();
 	//	unsigned char sendbuf[BUFFER_SIZE];
 	//	unsigned char rec;
@@ -125,7 +142,7 @@ void process(){
 				if(msgptr->header.frame_id == "ZHENCHA1_1"){
 					longibuf[0] = 21;
 				}
-				if(msgptr->header.frame_id == "ZHENCHA1_2"){
+				if(msgptr->header.frame_id == "ZHENCHA2_1"){
 					longibuf[0] = 22;
 				}
 				float longi = msgptr->longitude;
@@ -176,6 +193,9 @@ int main(int argc, char ** argv)
 	ros::Publisher detection_pub = nh.advertise<detection_result::detection_result_msg>("detection_result",100);
 	ros::param::get("ip",IP);
 	ros::param::get("~port",PORT);
+	ros::param::get("~udisk_dir",udisk_dir);
+	const string txt = udisk_dir + "/ZUOBIAO_KYXZ2018A.txt";
+	outfile.open(txt,ios::out);
 
 	//定义sockfd
 	sock_cli = socket(AF_INET,SOCK_STREAM, 0);
@@ -222,17 +242,17 @@ int main(int argc, char ** argv)
 	{
 		static int i =0;
 		stringstream str;
-		str<<"/home/zx/图片/IMG/"<<i<<".png";
+		str<<"/home/zx/图片/IMG/"<<i<<".jpg";
 		cv::Mat imgread;
 		imgread = cv::imread(str.str());
-		if(!imgread.empty())
+		if(!imgread.empty()&& i<15)
 		{
 			cv::resize(imgread,imgread,cv::Size(960,640));
 			sensor_msgs::ImagePtr immsg ;
 			immsg = cv_bridge::CvImage(std_msgs::Header(), "rgb8", imgread).toImageMsg();
 			detection_result::detection_result_msg msg_send;
 			msg_send.imgdata = *immsg;
-			msg_send.header.frame_id = names[i];
+			msg_send.header.frame_id = names[i-1];
 
 			cv::imshow("readimg", imgread);
 			cv::waitKey(3);
@@ -250,7 +270,7 @@ int main(int argc, char ** argv)
 				sendbuf[i] = data_encode[i];
 				//				cout<<i<<"   "<<nSize<<endl;
 			}
-			if( i == 1 || i == 2){
+			if( i == 5 || i == 3){
 
 				float longi = 35.23456;
 				float_to_uchar(longi, sendbuf);

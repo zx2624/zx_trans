@@ -31,7 +31,7 @@ def socket_client():
     # ip = rospy.get_param('ip')
     path = os.path.expanduser('~')
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    while s.connect_ex(("192.168.10.100", 6666)) != 0:
+    while s.connect_ex(("192.168.10.100  ", 6666)) != 0:
         print "wating for vehicle to open server ..."
         time.sleep(1)
 

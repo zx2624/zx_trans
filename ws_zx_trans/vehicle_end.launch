@@ -23,10 +23,11 @@
         <param name="selfip" value="192.168.10.102" type = "string" />
   </node>
  </-->
-<!--  检测结果发送结果发送</-->
+<!--  检测结果发送结果发送,并将检测结果保存到优盘 </-->
   <node pkg="tcp_client" name="tcp_client_node" type="tcp_client_node" output="screen">
         <param name="frame_id" value="base_link" />
 	<param name="port" type="int" value="6668" />
+	<param name="udisk_dir" type="string" value="/home/zx/桌面/data/udisk/" />
   </node>
 
 </launch>
