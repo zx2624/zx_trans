@@ -1,2 +1,2 @@
-camera_udp:detection_result:screen_cap:task_sender:tcp_client:tcp_server:vedio_recv
+camera_udp:detection_result:object_detector_msgs:screen_cap:task_sender:tcp_client:tcp_server:vedio_recv
 -DCATKIN_DEVEL_PREFIX=/home/zx/test/ws_zx_trans/devel -DCMAKE_INSTALL_PREFIX=/home/zx/test/ws_zx_trans/install -G Unix Makefiles

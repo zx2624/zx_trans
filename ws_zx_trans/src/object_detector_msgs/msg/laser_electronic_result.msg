@@ -1,0 +1,10 @@
+Header header
+uint32 frameID
+uint8  targetType
+uint16 confidence
+uint16 topleftX
+uint16 topleftY
+uint16 bottomrightX
+uint16 bottomrightY
+uint16 distance
+sensor_msgs/Image  image_data

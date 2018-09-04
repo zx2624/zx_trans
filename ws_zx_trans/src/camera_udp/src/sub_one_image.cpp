@@ -23,6 +23,7 @@
 #include <mutex>
 #include <thread>
 #include "detection_result/detection_result_msg.h"
+#include "object_detector_msgs/laser_electronic_result.h"
 using namespace std;
 using namespace cv;
 int PORT = 6667;
@@ -74,19 +75,11 @@ socklen_t len;
 //		//			std::cout << "Get one image!" << std::endl;
 //	}
 //};
-void thread11(){
-	while(1){
-		double timenow=ros::Time::now().toSec();
-		if(lasttime_1!=-1&&abs(timenow-lasttime_1)<0.1){//控制发送间隔，
-			capture >> image_0;
-			//			lasttime=timenow;
-			continue;
-		}
-		lasttime_1 = timenow;
+void probecb(object_detector_msgs::laser_electronic_resultConstPtr& msg){
+
 		mtx_0.lock();
-		capture >> image_0;
+		image_0 = (cv_bridge::toCvCopy(msg->image_data)->image).clone();
 		mtx_0.unlock();
-	}
 }
 void thread33(){
 	//recv
@@ -261,7 +254,8 @@ int main(int argc, char ** argv)
 
 	//todo;获取侦察视频
 	ros::Subscriber sub_front=nh.subscribe("/image", 1,thread22);//前视摄像头数据
-	ros::Subscriber sub_scree = nh.subscribe("screen_image_topic", 1, imageCb);//屏幕截图
+	ros::Subscriber sub_screeb = nh.subscribe("screen_image_topic", 1, imageCb);//屏幕截图
+	ros::Subscriber sub_probe = nh.subscribe("screen_image_topic", 1, probecb);//侦察视频
 	//	ros::
 	//	std::thread thread1{thread11};
 	std::thread thread3{thread33};//接收命令线程
