@@ -133,7 +133,7 @@ int main(int argc, char ** argv)
 				if(idx < 14)
 				{
 					stringstream str;
-					str<<local_dir<<names[idx]<<".jpg";
+					str<<local_dir<<"/"<<names[idx]<<".jpg";
 					cv::imwrite(str.str(),img_recv);
 				}
 				cv::imshow("got",img_recv);
