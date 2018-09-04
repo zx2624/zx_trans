@@ -17,12 +17,12 @@
         <param name="frame_id" value="base_link" />
   </node>
 
-<!--  selfip 是本机的ip ， </-->
+<!--  selfip 是本机的ip ，
   <node pkg="task_sender" name="txtReceiver.py" type="txtReceiver.py" output="screen">
         <param name="port" value="6666" type = "int" />
         <param name="selfip" value="192.168.10.102" type = "string" />
   </node>
-
+ </-->
 <!--  检测结果发送结果发送</-->
   <node pkg="tcp_client" name="tcp_client_node" type="tcp_client_node" output="screen">
         <param name="frame_id" value="base_link" />

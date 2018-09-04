@@ -19,16 +19,16 @@ import roslib
 
 
 def socket_service():
-    rospy.init_node('receiver')
-    port = rospy.get_param('~port')
-    ip = rospy.get_param('~selfip')
-    # print path
-    print "============task file receiver port=========%d" % port  
-    print "============local ip ===========%r" % ip
+    # rospy.init_node('receiver')
+    # port = rospy.get_param('~port')
+    # ip = rospy.get_param('~selfip')
+    # # print path
+    # print "============task file receiver port=========%d" % port  
+    # print "============local ip ===========%r" % ip
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((ip, port))
+        s.bind(("192.168.10.100", 6666))
         s.listen(10)
     except socket.error as msg:
         print(msg)
