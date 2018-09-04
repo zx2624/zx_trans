@@ -75,7 +75,7 @@ socklen_t len;
 //		//			std::cout << "Get one image!" << std::endl;
 //	}
 //};
-void probecb(object_detector_msgs::laser_electronic_resultConstPtr& msg){
+void probecb(const object_detector_msgs::laser_electronic_resultConstPtr& msg){
 
 		mtx_0.lock();
 		image_0 = (cv_bridge::toCvCopy(msg->image_data)->image).clone();
