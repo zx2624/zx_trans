@@ -53,11 +53,11 @@ void detetction_cb(const detection_result::detection_result_msgConstPtr& msg){
 	cv::imwrite(str.str(),image);
 	if(msg->header.frame_id == "ZHENCHA1_1"){
 		i++;
-		outfile<<"ZHENCHA( "<<msg->longitude<<" "<<msg->latitude<<") "<<msg->altitude<<endl;
+		outfile<<"ZHENCHA1( "<<msg->longitude<<" "<<msg->latitude<<" "<<msg->altitude<<")"<<endl;
 	}
 	if(msg->header.frame_id == "ZHENCHA2_1"){
 		i++;
-		outfile<<"ZHENCHA( "<<msg->longitude<<" "<<msg->latitude<<")"<<msg->altitude<<endl;
+		outfile<<"ZHENCHA2( "<<msg->longitude<<" "<<msg->latitude<<" "<<msg->altitude<<")"<<endl;
 	}
 	if(i == 2)
 		outfile.close();
