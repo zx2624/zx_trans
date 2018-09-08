@@ -40,6 +40,7 @@ sockaddr_in socket_add_result;
 int socket_result;
 
 VideoCapture capture(0);//打开摄像头
+
 Mat image_0,image_1,image_2;
 uchar encodeImg[6553555];
 double lasttime=-1;
@@ -77,9 +78,9 @@ socklen_t len;
 //};
 void probecb(const object_detector_msgs::laser_electronic_resultConstPtr& msg){
 
-		mtx_0.lock();
-		image_0 = (cv_bridge::toCvCopy(msg->image_data)->image).clone();
-		mtx_0.unlock();
+	mtx_0.lock();
+	image_0 = (cv_bridge::toCvCopy(msg->image_data)->image).clone();
+	mtx_0.unlock();
 }
 void thread33(){
 	//recv
@@ -91,23 +92,41 @@ void thread33(){
 			if(buf[0]=='0'||buf[0]=='1'||buf[0]=='2')
 			{
 				flag_channel = buf[0];
-			//			if(flag_channel == '1')
-			//				cout<<"flag is 1 @@@@@@@@@@@@@@@@@@@@@@@"<<endl;
+				//			if(flag_channel == '1')
+				//				cout<<"flag is 1 @@@@@@@@@@@@@@@@@@@@@@@"<<endl;
 				cout << "read command from server: " << flag_channel << endl;
 			}
 		}
 	}
 }
+void computercam(){
+	while(ros::ok()){
+		double timenow = ros::Time::now().toSec();
+		if(lasttime != -1 && timenow - lasttime < 0.1){
+//			lasttime = timenow;
+			capture>>image_1;
+			continue;
+		}
+		lasttime = timenow;
+		mtx_1.lock();
+		if(capture.isOpened())
+			capture>>image_1;
+//		cv::resize(image_1,image_1,cv::Size(960,640));
+		mtx_1.unlock();
+	}
+}
 void thread22(const sensor_msgs::ImageConstPtr& orgmsg){
 	mtx_1.lock();
 	image_1=(cv_bridge::toCvShare(orgmsg)->image).clone();
+	//	if(capture.isOpened())
+	//		capture>>image_1;
 	cv::resize(image_1,image_1,cv::Size(960,640));
 	mtx_1.unlock();
 }
 void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
 {
 	mtx_2.lock();
-//	cout<<"屏幕图像获取成功。。。。。"<<endl;
+	//	cout<<"屏幕图像获取成功。。。。。"<<endl;
 	image_2 = (cv_bridge::toCvShare(orgmsg)->image).clone();
 	cv::resize(image_2,image_2,cv::Size(image_2.cols/2,image_2.rows/2));
 	//	imshow("screen",image_2);
@@ -117,7 +136,7 @@ void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
 }
 
 void process(){
-	while(1){
+	while(ros::ok()){
 		double timenow=ros::Time::now().toSec();
 		lasttime = timenow;
 		Mat imgsend;
@@ -132,7 +151,7 @@ void process(){
 			imgsend = image_1.clone();
 			mtx_1.unlock();
 		}else if(flag_channel == '2'){
-//						cout<<"flag is 2"<<endl;
+			//						cout<<"flag is 2"<<endl;
 			mtx_2.lock();
 			imgsend = image_2.clone();
 			mtx_2.unlock();
@@ -144,11 +163,11 @@ void process(){
 			std::vector<uchar> data_encode;
 			std::vector<int> quality;
 			quality.push_back(CV_IMWRITE_JPEG_QUALITY);
-			quality.push_back(10);//进行50%的压缩
+			quality.push_back(100);//进行50%的压缩
 			imencode(".jpg", imgsend, data_encode,quality);//将图像编码
 			int nSize=data_encode.size();
 
-			//			cout<<"size is "<<nSize<<endl;
+						cout<<"size is "<<nSize<<endl;
 			for (int i = 0; i < nSize; i++)
 			{
 				encodeImg[i] = data_encode[i];
@@ -163,7 +182,7 @@ void process(){
 				std::vector<uchar> data_encode;
 				std::vector<int> quality;
 				quality.push_back(CV_IMWRITE_JPEG_QUALITY);
-				quality.push_back(10);//进行50%的压缩
+				quality.push_back(90);//进行50%的压缩
 				mtx_2.lock();
 				imencode(".jpg", image_2, data_encode,quality);//将图像编码
 				mtx_2.unlock();
@@ -196,7 +215,7 @@ void sendResult(){
 			mtx_2.unlock();
 			int nSize=data_encode.size();
 
-//			cout<<"size is "<<nSize<<endl;
+			//			cout<<"size is "<<nSize<<endl;
 			for (int i = 0; i < nSize; i++)
 			{
 				encodeImg[i] = data_encode[i];
@@ -219,10 +238,9 @@ int main(int argc, char ** argv)
 	ros::param::get("ip",IP);
 	ros::param::get("~port",PORT);
 	ros::param::get("~port2",PORT2);
-	cout<<"========IP=========="<<IP<<endl;
-	cout<<"========PORT=========="<<PORT<<endl;
+	cout<<"========视频传输客户端IP=========="<<IP<<endl;
+	cout<<"========视频传输客户端PORT=========="<<PORT<<endl;
 	cout<<"========PORT2=========="<<PORT2<<endl;
-
 	//	ImageDeal imgd(nh);
 	int count = 0;
 	cv::Mat srcImage;
@@ -255,9 +273,8 @@ int main(int argc, char ** argv)
 	//todo;获取侦察视频
 	ros::Subscriber sub_front=nh.subscribe("/image", 1,thread22);//前视摄像头数据
 	ros::Subscriber sub_screeb = nh.subscribe("screen_image_topic", 1, imageCb);//屏幕截图
-	ros::Subscriber sub_probe = nh.subscribe("laser_electronic_result", 1, probecb);//侦察视频
-	//	ros::
-	//	std::thread thread1{thread11};
+	ros::Subscriber sub_probe = nh.subscribe("realtime_video_topic", 1, probecb);//侦察视频
+//	std::thread thread1{computercam};
 	std::thread thread3{thread33};//接收命令线程
 	std::thread thread4{process};//整体处理发送线程
 	//	std::thread thread5{sendResult};

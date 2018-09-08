@@ -14,7 +14,7 @@
 #include <opencv2/opencv.hpp>
 #include <fstream>
 
-const int  MYPORT=6668;
+int  PORT=6668;
 #define QUEUE   20
 #define BUFFER_SIZE 655355
 using namespace std;
@@ -38,6 +38,7 @@ int main(int argc, char ** argv)
 	ros::NodeHandle nh;
 	string local_dir;
 	ros::param::get("~local_dir", local_dir);
+	ros::param::get("~port",PORT);
 	ofstream outfile(local_dir+"/ZUOBIAO_KYXZ2018A.txt", ios::out);
 	///定义sockfd
 	int server_sockfd = socket(AF_INET,SOCK_STREAM, 0);
@@ -45,17 +46,18 @@ int main(int argc, char ** argv)
 	///定义sockaddr_in
 	struct sockaddr_in server_sockaddr;
 	server_sockaddr.sin_family = AF_INET;
-	server_sockaddr.sin_port = htons(MYPORT);
+	server_sockaddr.sin_port = htons(PORT);
 	server_sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
 	///bind，成功返回0，出错返回-1
-	if(bind(server_sockfd,(struct sockaddr *)&server_sockaddr,sizeof(server_sockaddr))==-1)
+	while(bind(server_sockfd,(struct sockaddr *)&server_sockaddr,sizeof(server_sockaddr))==-1)
 	{
 		perror("bind");
-		exit(1);
+		sleep(1);
 	}
 
-	printf("监听%d端口\n",MYPORT);
+	printf("检测结果接收程序--监听%d端口\n",PORT);
+	cout<<"检测结果接收本地存储目录--"<<local_dir<<endl;
 	///listen，成功返回0，出错返回-1
 	if(listen(server_sockfd,QUEUE) == -1)
 	{

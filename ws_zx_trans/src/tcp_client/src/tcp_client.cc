@@ -22,7 +22,7 @@
 using namespace std;
 
 int PORT=6668;
-string IP = "192.168.8.119";
+string IP = "192.168.10.41";
 #define BUFFER_SIZE 655355
 int sock_cli;
 struct sockaddr_in servaddr;
@@ -195,6 +195,9 @@ int main(int argc, char ** argv)
 	ros::param::get("~port",PORT);
 	ros::param::get("~udisk_dir",udisk_dir);
 	const string txt = udisk_dir + "/ZUOBIAO_KYXZ2018A.txt";
+	cout<<"检测结果发送目标IP--"<<IP<<endl;
+	cout<<"检测结果发送目标端口--"<<PORT<<endl;
+	cout<<"检测结果u盘存储目录-- "<<txt<<endl;
 	outfile.open(txt,ios::out);
 
 	//定义sockfd

@@ -1,0 +1,31 @@
+IP地址：
+    丰田：192.168.10.30 ------对应主席台电脑：192.168.10.31
+    六吨：192.168.10.40 ------对应主席台电脑：192.168.10.41
+    bj80：192.168.10.50 ------对应主席电脑：192.168.10.51
+    
+
+--------------
+无人车端启动图传：
+    丰田：roslaunch toyota_launch/vehicle_end.launch
+    六吨：roslaunch 6t_launch/vehicle_end.launch
+    bj80：roslaunch bj80_launch/vehicle_end.launch
+主席台电脑启动图传
+    丰田：roslaunch toyota_launch/server_end.launch
+    六吨：roslaunch 6t_launch/server_end.launch
+    bj80：roslaunch bj80_launch/server_end.launch
+
+
+
+--------------
+任务文件接收：
+    丰田：rosrun task_sender toyota_receiver.py 
+    六吨：rosrun  task_sender 6t_receiver.py 
+    bj80：rosrun task_sender bj_receiver.py
+任务文件发送：
+    丰田：rosrun task_sender toyota_sender.py
+    六吨：rosrun  task_sender 6t_sender.py 
+    bj80：rosrun task_sender bj_sender.py
+
+
+
+张欣电话：15701313363

@@ -106,6 +106,7 @@ int main(int argc, char** argv)
 	//    SOCKET socket_vedio;
 //	ros::param::get("~ip",IP);
 	ros::param::get("~port",PORT);
+	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
 	namedWindow("vedios",CV_WINDOW_NORMAL);
 

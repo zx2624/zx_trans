@@ -1,0 +1,27 @@
+
+IP：目前规定丰田为192.168.10.100，服务器为192.168.10.101，六吨未定，bj80未定
+端口：
+    任务文件传输端口：6666
+    视频传输端口    ：6667
+    检测结果传输端口：6668
+
+
+主要功能如下：
+    1、视频传输：
+	 发送端在车上运行，ros包为camera_udp,节点为camerasend         --一共有三路视频，侦察视频和前视相机视频通过订阅两个尧玲和刘忠泽的话题，截屏是自己写的python ros包，如果不launch可以单独运行rosrun screen_cap screen_cap
+	 接收端在指挥部电脑上运行，ros包为vedio_recv，节点为vedio_recv
+         ip，port有默认，修改可通过launch文件修改
+    2、检测结果，
+         发送端在车上运行，ros包为tcp_client,节点为tcp_client
+         接收端在指挥部电脑运行，ros包为tcp_server ,节点为tcp_server
+	 ip，port有默认，修改可通过launch文件修改，发送端在发送的同时还需要把结果保存到本地，地址通过launch文件赋值，接收端需要把结果保存到c盘，通过launch文件修改
+    3、任务文件传输：
+         接收端在车上运行，也在之前的工作空间，rosrun task_sender txtSender.py
+	 发送端在指挥部运行， rosrun task_sender txt_Receiver.py
+	 比赛的时候拿到任务文件后放到主目录下的taskfile就可以运行了
+
+
+注意：使用之前一定注意服务器和车辆的ip地址，launch文件里的端口设置，建议直接写死，以后不要改了
+      调试的时候先运行任务文件传输，成功后再分别启动launch文件
+
+

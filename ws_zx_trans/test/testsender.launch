@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+
+  <param name="ip" type="string" value="192.168.10.24" />
+
+
+
+
+<!--  任务文件发送，参数需要进文件里改  主要是ip port</-->
+  <node pkg="task_sender" name="txtSender.py" type="txtSender.py" output="screen">
+        <param name="frame_id" value="base_link" />
+        <param name="port" value="6666" />
+
+  </node>
+
+
+
+</launch>
