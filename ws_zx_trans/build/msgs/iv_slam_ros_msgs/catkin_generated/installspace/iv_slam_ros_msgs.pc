@@ -1,0 +1,8 @@
+prefix=/home/zx/test/ws_zx_trans/install
+
+Name: iv_slam_ros_msgs
+Description: Description of iv_slam_ros_msgs
+Version: 0.2.0
+Cflags: -I/home/zx/test/ws_zx_trans/install/include
+Libs: -L/home/zx/test/ws_zx_trans/install/lib 
+Requires: geometry_msgs sensor_msgs nav_msgs

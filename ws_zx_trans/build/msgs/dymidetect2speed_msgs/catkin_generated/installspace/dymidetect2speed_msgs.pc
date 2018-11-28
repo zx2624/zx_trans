@@ -1,0 +1,8 @@
+prefix=/home/zx/test/ws_zx_trans/install
+
+Name: dymidetect2speed_msgs
+Description: Description of dymidetect2speed_msgs
+Version: 0.2.0
+Cflags: -I/home/zx/test/ws_zx_trans/install/include
+Libs: -L/home/zx/test/ws_zx_trans/install/lib 
+Requires: geometry_msgs nav_msgs sensor_msgs std_msgs

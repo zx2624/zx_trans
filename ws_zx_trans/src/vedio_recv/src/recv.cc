@@ -1,5 +1,3 @@
-#define  _CRT_SECURE_NO_WARNINGS
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include <ros/ros.h>
 #include <iostream>
 #include <opencv2/opencv.hpp>
@@ -24,6 +22,8 @@
 #include <fcntl.h>
 #include <thread>
 #include <mutex>
+#include "sensor_driver_msgs/GpswithHeading.h"
+#include "control_msgs/GetECUReport.h"
 using namespace cv;
 using namespace std;
 
@@ -42,10 +42,13 @@ sockaddr_in client_result;
 socklen_t len_result;
 char* name2="result";
 char* name1="result22";
+
 std::mutex mtx_0;
 std::mutex mtx_1;
-// namedWindow(name2,CV_WINDOW_NORMAL);
-// namedWindow(name1,CV_WINDOW_NORMAL);
+std::mutex mtx_gps;
+float altitude = 0, latitude = 0, longitude = 0;
+float speed = 0;
+int gear = -1;
 
 void command(){
 	while(1){
@@ -57,19 +60,34 @@ void command(){
 		usleep(100000);
 	}
 }
+void uchar_to_float(unsigned char* buf, float& longi, float& lati,float& alti){
+	longi = int ( buf[0] | buf[1] << 8 | buf[2] <<16 | buf[3] << 24) * 0.00001;
+	lati = int ( buf[4] | buf[5] << 8 | buf[6] <<16 | buf[7] << 24) * 0.00001;
+	alti = int ( buf[8] | buf[9] << 8 | buf[10] <<16 | buf[11] << 24) * 0.00001;
+}
 void receive(){
 	while(1){
-		char buf[65536];
+		unsigned char buf[65536];
 		std::vector<uchar> decode;
 		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
 		int pos = 0;
-		while (pos < n)
-		{
-			decode.push_back(buf[pos++]);//存入vector
+		if(n > 12){
+			while (pos < n)
+			{
+				decode.push_back(buf[pos++]);//存入vector
+			}
+			mtx_0.lock();
+			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
+			mtx_0.unlock();
 		}
-		mtx_0.lock();
-		image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-		mtx_0.unlock();
+		if(n == 12){
+			uchar_to_float(buf, longitude,latitude,altitude);
+		}
+		if(buf[0] == 231){//第一个字节231代表车辆信息
+			speed = int ( buf[1] | buf[2] << 8 | buf[3] <<16 | buf[4] << 24) * 0.00001;
+			gear = int(buf[5]);
+//			std::cout << "got status " << speed << "  " << shift_cur << std::endl;
+		}
 
 	}
 	close(socket_vedio);
@@ -105,6 +123,10 @@ int main(int argc, char** argv)
 	//
 	//    SOCKET socket_vedio;
 //	ros::param::get("~ip",IP);
+	ros::init(argc, argv, "cam_recv");
+	ros::NodeHandle nh;
+	ros::Publisher gps_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("/sensor_fusion_output", 20);
+	ros::Publisher status_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("ecudatareport", 20);
 	ros::param::get("~port",PORT);
 	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
@@ -145,6 +167,19 @@ int main(int argc, char** argv)
 			imshow("vedios",image_vedio);
 			mtx_0.unlock();
 		}
+		sensor_driver_msgs::GpswithHeading gps_msg;
+		mtx_gps.lock();
+		gps_msg.gps.altitude = altitude;
+		gps_msg.gps.longitude = longitude;
+		gps_msg.gps.latitude = latitude;
+		mtx_gps.unlock();
+		gps_pub.publish(gps_msg);
+
+		//发送车辆状态
+		control_msgs::GetECUReport status_msg;
+		status_msg.shift_cur.gear = gear;
+		status_msg.speed.velocity.x = speed;
+		status_pub.publish(status_msg);
 //		if(!image_result.empty()){
 //			mtx_1.lock();
 //			imshow("检测结果",image_result);

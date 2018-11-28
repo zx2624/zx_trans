@@ -5,6 +5,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  sensor_driver_msgs
 )
 
 find_package(OpenCV REQUIRED)

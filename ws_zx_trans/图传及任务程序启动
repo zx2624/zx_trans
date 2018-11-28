@@ -1,0 +1,33 @@
+IP地址：
+    丰田：192.168.10.30 ------对应主席台电脑：192.168.10.31
+    六吨：192.168.10.40 ------对应主席台电脑：192.168.10.41
+    bj80：192.168.10.50 ------对应主席电脑：192.168.10.51
+ 连接好设备后一定要先检查ip地址，可通过ifconfig命令查看，互相ping一下对方地址，保证联通再后续操作。
+
+-------------
+无人车端启动图传：--启动前需要检查launch文件的udisk_dir参数，改为比赛时的空优盘目录，注意加上‘/'   ！！！！！！！
+    丰田：roslaunch toyota_launch/vehicle_end.launch
+    六吨：roslaunch 6t_launch/vehicle_end.launch
+    bj80：roslaunch bj80_launch/vehicle_end.launch
+主席台电脑启动图传：--启动前需要检查launch文件的local_dir参数，改为本机的home主目录，比如"/home/zx/"，注意加上'/'  ！！！！！！！
+    丰田：roslaunch toyota_launch/server_end.launch
+    六吨：roslaunch 6t_launch/server_end.launch
+    bj80：roslaunch bj80_launch/server_end.launch
+
+
+
+--------------
+任务文件接收：
+    丰田：rosrun task_sender toyota_receiver.py 
+    六吨：rosrun  task_sender 6t_receiver.py 
+    bj80：rosrun task_sender bj_receiver.py
+任务文件发送：
+    丰田：rosrun task_sender toyota_sender.py
+    六吨：rosrun  task_sender 6t_sender.py 
+    bj80：rosrun task_sender bj_sender.py
+
+
+
+
+启动没有先后顺序，无人车这端启动图传和任务接收之后就等待就行，一切就绪后主席台端再发送任务文件无人车便开始运行。
+张欣电话：15701313363

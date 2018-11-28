@@ -56,27 +56,6 @@ CMAKE_BINARY_DIR = /home/zx/test/ws_zx_trans/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
@@ -89,27 +68,16 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
 
-# Special rule for the target install/strip
-install/strip/fast: install/strip
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
 
-.PHONY : install/strip/fast
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: install/local
-
-.PHONY : install/local/fast
+.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -122,16 +90,48 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
 
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
+# Special rule for the target test
+test/fast: test
 
-.PHONY : rebuild_cache/fast
+.PHONY : test/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: install/local
+
+.PHONY : install/local/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: install/strip
+
+.PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -166,21 +166,6 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
-
-# Convenience name for target.
-object_detector_msgs_gennodejs: object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
-
-.PHONY : object_detector_msgs_gennodejs
-
-# fast build rule for target.
-object_detector_msgs_gennodejs/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/build
-.PHONY : object_detector_msgs_gennodejs/fast
-
-# Convenience name for target.
 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_cpp.dir/rule:
 	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_cpp.dir/rule
 .PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_cpp.dir/rule
@@ -194,96 +179,6 @@ object_detector_msgs_generate_messages_cpp: object_detector_msgs/CMakeFiles/obje
 object_detector_msgs_generate_messages_cpp/fast:
 	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_cpp.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_cpp.dir/build
 .PHONY : object_detector_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
-
-# Convenience name for target.
-_object_detector_msgs_generate_messages_check_deps_laser_electronic_result: object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
-
-.PHONY : _object_detector_msgs_generate_messages_check_deps_laser_electronic_result
-
-# fast build rule for target.
-_object_detector_msgs_generate_messages_check_deps_laser_electronic_result/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/build.make object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/build
-.PHONY : _object_detector_msgs_generate_messages_check_deps_laser_electronic_result/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
-
-# Convenience name for target.
-object_detector_msgs_generate_messages: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
-
-.PHONY : object_detector_msgs_generate_messages
-
-# fast build rule for target.
-object_detector_msgs_generate_messages/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/build
-.PHONY : object_detector_msgs_generate_messages/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-nav_msgs_generate_messages_eus: object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/rule
-
-.PHONY : nav_msgs_generate_messages_eus
-
-# fast build rule for target.
-nav_msgs_generate_messages_eus/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/build.make object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_eus.dir/build
-.PHONY : nav_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-object_detector_msgs_generate_messages_eus: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
-
-.PHONY : object_detector_msgs_generate_messages_eus
-
-# fast build rule for target.
-object_detector_msgs_generate_messages_eus/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/build
-.PHONY : object_detector_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-object_detector_msgs_generate_messages_py: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
-
-.PHONY : object_detector_msgs_generate_messages_py
-
-# fast build rule for target.
-object_detector_msgs_generate_messages_py/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/build
-.PHONY : object_detector_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-nav_msgs_generate_messages_cpp: object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : nav_msgs_generate_messages_cpp
-
-# fast build rule for target.
-nav_msgs_generate_messages_cpp/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/build.make object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_cpp.dir/build
-.PHONY : nav_msgs_generate_messages_cpp/fast
 
 # Convenience name for target.
 object_detector_msgs/CMakeFiles/object_detector_msgs_gencpp.dir/rule:
@@ -301,49 +196,34 @@ object_detector_msgs_gencpp/fast:
 .PHONY : object_detector_msgs_gencpp/fast
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule
+object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
 
 # Convenience name for target.
-nav_msgs_generate_messages_nodejs: object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/rule
+object_detector_msgs_generate_messages_nodejs: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
 
-.PHONY : nav_msgs_generate_messages_nodejs
+.PHONY : object_detector_msgs_generate_messages_nodejs
 
 # fast build rule for target.
-nav_msgs_generate_messages_nodejs/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/build.make object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_nodejs.dir/build
-.PHONY : nav_msgs_generate_messages_nodejs/fast
+object_detector_msgs_generate_messages_nodejs/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/build
+.PHONY : object_detector_msgs_generate_messages_nodejs/fast
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/rule
+object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
 
 # Convenience name for target.
-nav_msgs_generate_messages_lisp: object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/rule
+_object_detector_msgs_generate_messages_check_deps_laser_electronic_result: object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/rule
 
-.PHONY : nav_msgs_generate_messages_lisp
+.PHONY : _object_detector_msgs_generate_messages_check_deps_laser_electronic_result
 
 # fast build rule for target.
-nav_msgs_generate_messages_lisp/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/build.make object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_lisp.dir/build
-.PHONY : nav_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
-
-# Convenience name for target.
-object_detector_msgs_geneus: object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
-
-.PHONY : object_detector_msgs_geneus
-
-# fast build rule for target.
-object_detector_msgs_geneus/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/build
-.PHONY : object_detector_msgs_geneus/fast
+_object_detector_msgs_generate_messages_check_deps_laser_electronic_result/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/build.make object_detector_msgs/CMakeFiles/_object_detector_msgs_generate_messages_check_deps_laser_electronic_result.dir/build
+.PHONY : _object_detector_msgs_generate_messages_check_deps_laser_electronic_result/fast
 
 # Convenience name for target.
 object_detector_msgs/CMakeFiles/object_detector_msgs_genpy.dir/rule:
@@ -361,49 +241,49 @@ object_detector_msgs_genpy/fast:
 .PHONY : object_detector_msgs_genpy/fast
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
+object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
 
 # Convenience name for target.
-object_detector_msgs_genlisp: object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
+object_detector_msgs_generate_messages_py: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/rule
 
-.PHONY : object_detector_msgs_genlisp
+.PHONY : object_detector_msgs_generate_messages_py
 
 # fast build rule for target.
-object_detector_msgs_genlisp/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/build
-.PHONY : object_detector_msgs_genlisp/fast
+object_detector_msgs_generate_messages_py/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_py.dir/build
+.PHONY : object_detector_msgs_generate_messages_py/fast
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/rule
+object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
 
 # Convenience name for target.
-nav_msgs_generate_messages_py: object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/rule
+object_detector_msgs_generate_messages: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/rule
 
-.PHONY : nav_msgs_generate_messages_py
+.PHONY : object_detector_msgs_generate_messages
 
 # fast build rule for target.
-nav_msgs_generate_messages_py/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/build.make object_detector_msgs/CMakeFiles/nav_msgs_generate_messages_py.dir/build
-.PHONY : nav_msgs_generate_messages_py/fast
+object_detector_msgs_generate_messages/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages.dir/build
+.PHONY : object_detector_msgs_generate_messages/fast
 
 # Convenience name for target.
-object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
-.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
+object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
 
 # Convenience name for target.
-object_detector_msgs_generate_messages_nodejs: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/rule
+object_detector_msgs_geneus: object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/rule
 
-.PHONY : object_detector_msgs_generate_messages_nodejs
+.PHONY : object_detector_msgs_geneus
 
 # fast build rule for target.
-object_detector_msgs_generate_messages_nodejs/fast:
-	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_nodejs.dir/build
-.PHONY : object_detector_msgs_generate_messages_nodejs/fast
+object_detector_msgs_geneus/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_geneus.dir/build
+.PHONY : object_detector_msgs_geneus/fast
 
 # Convenience name for target.
 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_lisp.dir/rule:
@@ -420,36 +300,76 @@ object_detector_msgs_generate_messages_lisp/fast:
 	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_lisp.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_lisp.dir/build
 .PHONY : object_detector_msgs_generate_messages_lisp/fast
 
+# Convenience name for target.
+object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
+
+# Convenience name for target.
+object_detector_msgs_genlisp: object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/rule
+
+.PHONY : object_detector_msgs_genlisp
+
+# fast build rule for target.
+object_detector_msgs_genlisp/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_genlisp.dir/build
+.PHONY : object_detector_msgs_genlisp/fast
+
+# Convenience name for target.
+object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+object_detector_msgs_generate_messages_eus: object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/rule
+
+.PHONY : object_detector_msgs_generate_messages_eus
+
+# fast build rule for target.
+object_detector_msgs_generate_messages_eus/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_generate_messages_eus.dir/build
+.PHONY : object_detector_msgs_generate_messages_eus/fast
+
+# Convenience name for target.
+object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f CMakeFiles/Makefile2 object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
+.PHONY : object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
+
+# Convenience name for target.
+object_detector_msgs_gennodejs: object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/rule
+
+.PHONY : object_detector_msgs_gennodejs
+
+# fast build rule for target.
+object_detector_msgs_gennodejs/fast:
+	cd /home/zx/test/ws_zx_trans/build && $(MAKE) -f object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/build.make object_detector_msgs/CMakeFiles/object_detector_msgs_gennodejs.dir/build
+.PHONY : object_detector_msgs_gennodejs/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... list_install_components"
-	@echo "... object_detector_msgs_gennodejs"
-	@echo "... object_detector_msgs_generate_messages_cpp"
-	@echo "... _object_detector_msgs_generate_messages_check_deps_laser_electronic_result"
-	@echo "... object_detector_msgs_generate_messages"
-	@echo "... nav_msgs_generate_messages_eus"
-	@echo "... object_detector_msgs_generate_messages_eus"
-	@echo "... object_detector_msgs_generate_messages_py"
-	@echo "... nav_msgs_generate_messages_cpp"
-	@echo "... test"
-	@echo "... object_detector_msgs_gencpp"
-	@echo "... nav_msgs_generate_messages_nodejs"
 	@echo "... install"
-	@echo "... nav_msgs_generate_messages_lisp"
-	@echo "... object_detector_msgs_geneus"
-	@echo "... object_detector_msgs_genpy"
-	@echo "... object_detector_msgs_genlisp"
-	@echo "... install/strip"
-	@echo "... nav_msgs_generate_messages_py"
-	@echo "... object_detector_msgs_generate_messages_nodejs"
-	@echo "... install/local"
-	@echo "... object_detector_msgs_generate_messages_lisp"
-	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... test"
+	@echo "... install/local"
+	@echo "... object_detector_msgs_generate_messages_cpp"
+	@echo "... object_detector_msgs_gencpp"
+	@echo "... list_install_components"
+	@echo "... install/strip"
+	@echo "... object_detector_msgs_generate_messages_nodejs"
+	@echo "... _object_detector_msgs_generate_messages_check_deps_laser_electronic_result"
+	@echo "... object_detector_msgs_genpy"
+	@echo "... object_detector_msgs_generate_messages_py"
+	@echo "... object_detector_msgs_generate_messages"
+	@echo "... object_detector_msgs_geneus"
+	@echo "... object_detector_msgs_generate_messages_lisp"
+	@echo "... object_detector_msgs_genlisp"
+	@echo "... object_detector_msgs_generate_messages_eus"
+	@echo "... object_detector_msgs_gennodejs"
 .PHONY : help
 
 

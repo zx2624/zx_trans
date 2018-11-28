@@ -19,6 +19,7 @@
 #include <fstream>
 #include "detection_result/detection_result_msg.h"
 
+
 using namespace std;
 
 int PORT=6668;
@@ -46,7 +47,9 @@ void float_to_uchar(float b, unsigned char* sendbuf){
 void detetction_cb(const detection_result::detection_result_msgConstPtr& msg){
 	static int i =0;
 	mtx_dq.lock();
+	////////////////
 	msg_q.push_back(msg);
+	//所有收到的文件都存入本地优盘，其中yinbidian1 2 会从优盘里读取然后发送到主席台
 	cv::Mat image=(cv_bridge::toCvCopy(msg->imgdata,sensor_msgs::image_encodings::RGB8)->image);
 	stringstream str;
 	str<<udisk_dir<<msg->header.frame_id<<".jpg";
@@ -139,6 +142,8 @@ void process(){
 			//发送经纬度
 			if(abs(msgptr->longitude)>5){
 				unsigned char longibuf[13];
+				memset(longibuf ,0 ,sizeof(longibuf));
+				longibuf[0] = 234;
 				if(msgptr->header.frame_id == "ZHENCHA1_1"){
 					longibuf[0] = 21;
 				}
@@ -149,7 +154,7 @@ void process(){
 				float_to_uchar(longi, longibuf+1);
 				float lati = msgptr->latitude;
 				float_to_uchar(lati, longibuf+5);
-				float alti = 3.467;
+				float alti = msgptr->altitude;
 				//				msg_send.altitude = alti;
 				//				msg_send.latitude = lati;
 				//				msg_send.longitude = longi;
@@ -184,7 +189,101 @@ void process(){
 		}else{
 			sleep(1);
 		}
+		//从本地读取文件YINBIDIAN-1 和2 并发送
+//		string name1 = udisk_dir + "YINBIDIAN_1.jpg";
+//		cv::Mat yinbidian1 = cv::imread(name1);
+
+
+//		if(!yinbidian1.empty()){
+//			cv::imshow("local",yinbidian1);
+//			cv::waitKey();
+//			//发送size信息
+//			int width = yinbidian1.cols;
+//			int height = yinbidian1.rows;
+//			char size_buf[5];
+//			size_buf[0] = 1;
+//			size_buf[1] = width & 0xff;
+//			size_buf[2] = (width & 0xff00) >> 8;
+//			size_buf[3] = height& 0xff;
+//			size_buf[4] = (height & 0xff00) >>8;
+//			send(sock_cli,size_buf,5,0);
+//			recv(sock_cli,&flag,1,0);
+//			//发送图片
+//			int pos = 0;
+//			int all_buf_size = 3*width*height;
+//			while( pos < all_buf_size){
+//				memset(img_buf,0,1001);
+//				img_buf[0] = 3;
+//				if(all_buf_size - pos >= 1000){
+//					memcpy(img_buf+1, yinbidian1.data+pos,1000);
+//					send(sock_cli,img_buf,1001,0);
+//					pos+=1000;
+//				}else{
+//					int size_send = all_buf_size - pos;
+//					memcpy(img_buf+1, yinbidian1.data+pos,size_send);
+//					char a = char(0 & 0xff);
+//					img_buf[size_send+1] = a;
+//					send(sock_cli,img_buf,size_send + 2,0);
+//					pos += all_buf_size - pos;
+//				}
+//				recv(sock_cli ,&flag, 1, 0);
+//				usleep(10);
+//
+//			}
+//		}
+//		string name2 = udisk_dir + "YINBIDIAN_2.jpg";
+//		cv::Mat yinbidian2 = cv::imread(name2);
+//		if(!yinbidian2.empty()){
+//			cv::imshow("local",yinbidian2);
+//			cv::waitKey();
+//			//发送size信息
+//			int width = yinbidian2.cols;
+//			int height = yinbidian2.rows;
+//			char size_buf[5];
+//			size_buf[0] = 1;
+//			size_buf[1] = width & 0xff;
+//			size_buf[2] = (width & 0xff00) >> 8;
+//			size_buf[3] = height& 0xff;
+//			size_buf[4] = (height & 0xff00) >>8;
+//			send(sock_cli,size_buf,5,0);
+//			recv(sock_cli,&flag,1,0);
+//			//发送图片
+//			int pos = 0;
+//			int all_buf_size = 3*width*height;
+//			while( pos < all_buf_size){
+//				memset(img_buf,0,1001);
+//				img_buf[0] = 3;
+//				if(all_buf_size - pos >= 1000){
+//					memcpy(img_buf+1, yinbidian2.data+pos,1000);
+//					send(sock_cli,img_buf,1001,0);
+//					pos+=1000;
+//				}else{
+//					int size_send = all_buf_size - pos;
+//					memcpy(img_buf+1, yinbidian2.data+pos,size_send);
+//					char a = char(0 & 0xff);
+//					img_buf[size_send+1] = a;
+//					send(sock_cli,img_buf,size_send + 2,0);
+//					pos += all_buf_size - pos;
+//				}
+//				recv(sock_cli ,&flag, 1, 0);
+//				usleep(10);
+//			}
+//		}
 	}
+	close(sock_cli);
+}
+void newcb(const sensor_msgs::ImageConstPtr& msg){
+	cv_bridge::CvImageConstPtr ptr;
+	ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
+	cv:imshow("tt",ptr->image);
+	cv::waitKey(3);
+	char *home;
+	home = getenv("HOME");
+	string hom = home;
+	stringstream str;
+	str<<hom<<"/"<<"taskfile/cpan/"<<msg->header.frame_id<<".jpg";
+	cout<<str.str()<<endl;
+	cv::imwrite(str.str(),ptr->image);
 }
 int main(int argc, char ** argv)
 {
@@ -194,11 +293,12 @@ int main(int argc, char ** argv)
 	ros::param::get("ip",IP);
 	ros::param::get("~port",PORT);
 	ros::param::get("~udisk_dir",udisk_dir);
-	const string txt = udisk_dir + "/ZUOBIAO_KYXZ2018A.txt";
+	const string txt = udisk_dir + "ZUOBIAO_KYXZ2018A.txt";
 	cout<<"检测结果发送目标IP--"<<IP<<endl;
 	cout<<"检测结果发送目标端口--"<<PORT<<endl;
 	cout<<"检测结果u盘存储目录-- "<<txt<<endl;
 	outfile.open(txt,ios::out);
+	outfile.precision(10);
 
 	//定义sockfd
 	sock_cli = socket(AF_INET,SOCK_STREAM, 0);
@@ -217,6 +317,7 @@ int main(int argc, char ** argv)
 	}
 	printf("服务器连接成功\n");
 	ros::Subscriber detection_sub = nh.subscribe<detection_result::detection_result_msg>("detection_result",100,detetction_cb);
+	ros::Subscriber unclass_sub = nh.subscribe<sensor_msgs::Image>("/image",100, newcb);
 	std::thread thread1{process};
 
 	while(0){
@@ -273,13 +374,27 @@ int main(int argc, char ** argv)
 				sendbuf[i] = data_encode[i];
 				//				cout<<i<<"   "<<nSize<<endl;
 			}
-			if( i == 5 || i == 3){
+			if( i == 4 || i == 3){
 
 				float longi = 35.23456;
 				float_to_uchar(longi, sendbuf);
 				float lati = 110.16785;
 				float_to_uchar(lati, sendbuf+4);
 				float alti = 3.467;
+				msg_send.altitude = alti;
+				msg_send.latitude = lati;
+				msg_send.longitude = longi;
+				float_to_uchar(alti, sendbuf+8);
+				send(sock_cli, sendbuf, 12,0); ///发送
+				cout<<fixed<<setprecision(5)<<"the number i send is "<<longi<<" "<<lati<<" "<<alti<<endl;
+			}
+			if( i == 5 || i == 6){
+
+				float longi = 114.141414;
+				float_to_uchar(longi, sendbuf);
+				float lati  = 36.363636;
+				float_to_uchar(lati, sendbuf+4);
+				float alti = 47.676767;
 				msg_send.altitude = alti;
 				msg_send.latitude = lati;
 				msg_send.longitude = longi;

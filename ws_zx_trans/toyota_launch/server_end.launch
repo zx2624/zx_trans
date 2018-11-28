@@ -23,7 +23,7 @@
 <!--  检测结果发送结果接收</-->
   <node pkg="tcp_server" name="tcp_server_node" type="tcp_server_node" output="screen">
 	<param name="port" type="int" value="6668" />
-	<param name="local_dir" type="string" value="/home/zx/taskfile/cpan/" />
+	<param name="local_dir" type="string" value="/home/zx/" />
   </node>
 
 </launch>

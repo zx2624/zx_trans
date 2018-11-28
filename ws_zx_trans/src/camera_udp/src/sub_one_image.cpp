@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <cv_bridge/cv_bridge.h>
 #include <ros/ros.h>
@@ -24,6 +23,8 @@
 #include <thread>
 #include "detection_result/detection_result_msg.h"
 #include "object_detector_msgs/laser_electronic_result.h"
+#include "sensor_driver_msgs/GpswithHeading.h"
+#include "control_msgs/GetECUReport.h"
 using namespace std;
 using namespace cv;
 int PORT = 6667;
@@ -33,6 +34,11 @@ string IP = "192.168.8.119";
 std::mutex mtx_0;
 std::mutex mtx_1;
 std::mutex mtx_2;
+std::mutex mtx_gps;
+std::mutex mtx_status;
+float longitude = 0, altitude = 0, latitude = 0;
+float speed = 0;
+unsigned char gear;
 sockaddr_in server_vedio;
 int socket_vedio;
 
@@ -123,6 +129,11 @@ void thread22(const sensor_msgs::ImageConstPtr& orgmsg){
 	cv::resize(image_1,image_1,cv::Size(960,640));
 	mtx_1.unlock();
 }
+void leftimageCb(const sensor_msgs::ImageConstPtr& orgmsg){
+	mtx_0.lock();
+	image_0 = (cv_bridge::toCvCopy(orgmsg)->image).clone();
+	mtx_0.unlock();
+}
 void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
 {
 	mtx_2.lock();
@@ -134,7 +145,13 @@ void imageCb(const sensor_msgs::ImageConstPtr& orgmsg)
 	mtx_2.unlock();
 
 }
-
+void float_to_uchar(float b, unsigned char* sendbuf){
+	int a = b * 100000;
+	sendbuf[0] = a & 0xff;
+	sendbuf[1] = (a & 0xff00) >> 8;
+	sendbuf[2] = (a & 0xff0000) >> 16;
+	sendbuf[3] = (a & 0xff000000) >> 24;
+}
 void process(){
 	while(ros::ok()){
 		double timenow=ros::Time::now().toSec();
@@ -163,11 +180,10 @@ void process(){
 			std::vector<uchar> data_encode;
 			std::vector<int> quality;
 			quality.push_back(CV_IMWRITE_JPEG_QUALITY);
-			quality.push_back(100);//进行50%的压缩
+			quality.push_back(10);//进行50%的压缩
 			imencode(".jpg", imgsend, data_encode,quality);//将图像编码
 			int nSize=data_encode.size();
 
-						cout<<"size is "<<nSize<<endl;
 			for (int i = 0; i < nSize; i++)
 			{
 				encodeImg[i] = data_encode[i];
@@ -198,6 +214,24 @@ void process(){
 				memset(&encodeImg, 0, sizeof(encodeImg));  //初始化结构体
 			}
 		}
+		if(latitude > 10){
+			unsigned char send_buf_gps[12];
+			mtx_gps.lock();
+			float_to_uchar(longitude, send_buf_gps);
+			float_to_uchar(latitude, send_buf_gps + 4);
+			float_to_uchar(altitude, send_buf_gps + 8);
+			mtx_gps.unlock();
+			sendto(socket_vedio, send_buf_gps, 12, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
+		}
+		//发送车辆信息
+		unsigned char send_buf_status[6];
+		send_buf_status[0] = 231;//第一个字节==231代表传输的是状态信息
+		mtx_status.lock();
+		float_to_uchar(speed, send_buf_status + 1);
+		send_buf_status[5] = (unsigned char) gear;//第六个字节代表档位
+		mtx_status.unlock();
+		sendto(socket_vedio, send_buf_status, 6, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
+
 		usleep(100000);
 	}
 
@@ -229,6 +263,22 @@ void sendResult(){
 		sleep(1);
 	}
 
+
+}
+void gpscallback(const sensor_driver_msgs::GpswithHeadingConstPtr& gpsmsg){
+	mtx_gps.lock();
+	latitude = gpsmsg->gps.latitude;
+	longitude = gpsmsg->gps.longitude;
+	altitude = gpsmsg->gps.altitude;
+	mtx_gps.unlock();
+
+}
+void statuscallback(const control_msgs::GetECUReportConstPtr& status_msg){
+	std::cout << "got ecudata -- " << std::endl;
+	mtx_status.lock();
+	speed = (float) status_msg->speed.velocity.linear.x;
+	gear = (char)status_msg->shift_cur.gear;
+	mtx_status.unlock();
 
 }
 int main(int argc, char ** argv)
@@ -273,7 +323,10 @@ int main(int argc, char ** argv)
 	//todo;获取侦察视频
 	ros::Subscriber sub_front=nh.subscribe("/image", 1,thread22);//前视摄像头数据
 	ros::Subscriber sub_screeb = nh.subscribe("screen_image_topic", 1, imageCb);//屏幕截图
-	ros::Subscriber sub_probe = nh.subscribe("realtime_video_topic", 1, probecb);//侦察视频
+//	ros::Subscriber sub_probe = nh.subscribe("realtime_video_topic", 1, probecb);//侦察视频
+	ros::Subscriber sub_left = nh.subscribe("/left_image", 1, leftimageCb);
+	ros::Subscriber sub_gps = nh.subscribe("/sensor_fusion_output", 1, gpscallback);
+	ros::Subscriber sub_status = nh.subscribe("ecudatareport", 1, statuscallback);
 //	std::thread thread1{computercam};
 	std::thread thread3{thread33};//接收命令线程
 	std::thread thread4{process};//整体处理发送线程

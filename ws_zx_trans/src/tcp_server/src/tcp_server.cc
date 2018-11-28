@@ -39,7 +39,8 @@ int main(int argc, char ** argv)
 	string local_dir;
 	ros::param::get("~local_dir", local_dir);
 	ros::param::get("~port",PORT);
-	ofstream outfile(local_dir+"/ZUOBIAO_KYXZ2018A.txt", ios::out);
+	ofstream outfile(local_dir+"ZUOBIAO_KYXZ2018A.txt", ios::out);
+	outfile.precision(10);
 	///定义sockfd
 	int server_sockfd = socket(AF_INET,SOCK_STREAM, 0);
 
@@ -82,6 +83,10 @@ int main(int argc, char ** argv)
 	cv::Mat img_recv;
 	int width,height;
 	int pos = 0;
+	if(!ros::ok()){
+		close(conn);
+		close(server_sockfd);
+	}
 	while(ros::ok())
 	{
 
@@ -135,7 +140,7 @@ int main(int argc, char ** argv)
 				if(idx < 14)
 				{
 					stringstream str;
-					str<<local_dir<<"/"<<names[idx]<<".jpg";
+					str<<local_dir<<names[idx]<<".jpg";
 					cv::imwrite(str.str(),img_recv);
 				}
 				cv::imshow("got",img_recv);
@@ -191,8 +196,7 @@ int main(int argc, char ** argv)
 		//        usleep(100000);
 	}
 	//	ros::spin();
-	close(conn);
-	close(server_sockfd);
+
 	return 0;
 }
 
