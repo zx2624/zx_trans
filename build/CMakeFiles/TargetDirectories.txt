@@ -1,4 +1,0 @@
-/home/zx/桌面/test/build/CMakeFiles/rebuild_cache.dir
-/home/zx/桌面/test/build/CMakeFiles/server.dir
-/home/zx/桌面/test/build/CMakeFiles/edit_cache.dir
-/home/zx/桌面/test/build/CMakeFiles/client.dir

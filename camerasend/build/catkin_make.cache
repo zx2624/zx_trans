@@ -1,2 +1,0 @@
-camera_udp:screen_cap
--DCATKIN_DEVEL_PREFIX=/home/zx/test/camerasend/devel -DCMAKE_INSTALL_PREFIX=/home/zx/test/camerasend/install -G Unix Makefiles

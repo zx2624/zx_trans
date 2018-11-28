@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "cam_recv");
 	ros::NodeHandle nh;
 	ros::Publisher gps_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("/sensor_fusion_output", 20);
-	ros::Publisher status_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("ecudatareport", 20);
+	ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
 	ros::param::get("~port",PORT);
 	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
@@ -178,7 +178,7 @@ int main(int argc, char** argv)
 		//发送车辆状态
 		control_msgs::GetECUReport status_msg;
 		status_msg.shift_cur.gear = gear;
-		status_msg.speed.velocity.x = speed;
+		status_msg.speed.velocity.linear.x = speed;
 		status_pub.publish(status_msg);
 //		if(!image_result.empty()){
 //			mtx_1.lock();

@@ -1,4 +1,0 @@
-/home/zx/test/udp_camera/build/CMakeFiles/rebuild_cache.dir
-/home/zx/test/udp_camera/build/CMakeFiles/server.dir
-/home/zx/test/udp_camera/build/CMakeFiles/edit_cache.dir
-/home/zx/test/udp_camera/build/CMakeFiles/client.dir
