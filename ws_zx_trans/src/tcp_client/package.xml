@@ -58,7 +58,13 @@
   <exec_depend>cv_bridge</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>std_msgs</exec_depend>
-  <depend>detection_result</depend>
+  <build_depend>sensor_driver_msgs</build_depend>
+  <exec_depend>sensor_driver_msgs</exec_depend>
+  <exec_depend>control_msgs</exec_depend>
+  <build_depend>control_msgs</build_depend>
+  <build_depend>detection_result</build_depend>
+  <exec_depend>detection_result</exec_depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

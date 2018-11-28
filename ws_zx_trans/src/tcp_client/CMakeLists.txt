@@ -11,6 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   roscpp
   std_msgs
+  sensor_driver_msgs
+  control_msgs
   detection_result
 )
 
@@ -20,7 +22,9 @@ find_package(Threads)
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES tcp_client
-#  CATKIN_DEPENDS cv_bridge roscpp std_msgs
+  CATKIN_DEPENDS roscpp   std_msgs   sensor_driver_msgs
+  control_msgs
+  detection_result
 #  DEPENDS system_lib
 )
 
@@ -30,7 +34,7 @@ include_directories(
 )
 
 add_executable(${PROJECT_NAME}_node src/tcp_client.cc)
-
+ add_dependencies(${PROJECT_NAME}_node detection_result_generate_messages_cpp control_msgs_generate_messages_cpp)
  target_link_libraries(${PROJECT_NAME}_node ${OpenCV_LIBS} ${catkin_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 #############
 ## Install ##
