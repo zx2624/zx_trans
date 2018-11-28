@@ -1,8 +1,0 @@
-prefix=/home/zx/test/ws_zx_trans/devel
-
-Name: geographic_msgs
-Description: Description of geographic_msgs
-Version: 0.5.2
-Cflags: -I/home/zx/test/ws_zx_trans/devel/include
-Libs: -L/home/zx/test/ws_zx_trans/devel/lib 
-Requires: message_runtime geometry_msgs uuid_msgs std_msgs

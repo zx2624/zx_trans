@@ -2,7 +2,7 @@
 <launch>
 
 <!--  此ip为视频发送的目标ip , 即指挥所电脑ip  </-->
-  <param name="ip" type="string" value="192.168.1.44" />
+  <param name="ip" type="string" value="192.168.1.54" />
 
 
 <!--  视频传输</-->

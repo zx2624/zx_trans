@@ -1,8 +1,0 @@
-prefix=/home/zx/test/ws_zx_trans/devel
-
-Name: object_detector_msgs
-Description: Description of object_detector_msgs
-Version: 0.0.0
-Cflags: -I/home/zx/test/ws_zx_trans/devel/include
-Libs: -L/home/zx/test/ws_zx_trans/devel/lib 
-Requires: geometry_msgs nav_msgs sensor_msgs std_msgs

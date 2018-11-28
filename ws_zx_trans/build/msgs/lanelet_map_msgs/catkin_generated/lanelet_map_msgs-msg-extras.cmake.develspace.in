@@ -1,2 +1,0 @@
-set(lanelet_map_msgs_MESSAGE_FILES "/home/zx/test/ws_zx_trans/src/msgs/lanelet_map_msgs/msg/Node.msg;/home/zx/test/ws_zx_trans/src/msgs/lanelet_map_msgs/msg/Way.msg;/home/zx/test/ws_zx_trans/src/msgs/lanelet_map_msgs/msg/Regulatory.msg;/home/zx/test/ws_zx_trans/src/msgs/lanelet_map_msgs/msg/Lanelet.msg;/home/zx/test/ws_zx_trans/src/msgs/lanelet_map_msgs/msg/LaneletMap.msg")
-set(lanelet_map_msgs_SERVICE_FILES "")

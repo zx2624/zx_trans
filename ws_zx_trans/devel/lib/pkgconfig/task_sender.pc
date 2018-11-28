@@ -1,8 +1,0 @@
-prefix=/home/zx/test/ws_zx_trans/devel
-
-Name: task_sender
-Description: Description of task_sender
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/zx/test/ws_zx_trans/devel/lib 
-Requires: 

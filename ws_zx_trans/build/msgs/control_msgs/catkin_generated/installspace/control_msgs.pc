@@ -1,8 +1,0 @@
-prefix=/home/zx/test/ws_zx_trans/install
-
-Name: control_msgs
-Description: Description of control_msgs
-Version: 0.0.0
-Cflags: -I/home/zx/test/ws_zx_trans/install/include
-Libs: -L/home/zx/test/ws_zx_trans/install/lib 
-Requires: message_generation roscpp std_msgs geometry_msgs
