@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "cam_recv");
 	ros::NodeHandle nh;
 	ros::Publisher gps_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("/sensor_fusion_output", 20);
-        ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 30);
+        ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
 	ros::param::get("~port",PORT);
 	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
