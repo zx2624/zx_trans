@@ -40,7 +40,7 @@ include_directories(
 
 
 
- add_executable(cmerasend src/sub_one_image.cpp)
+ add_executable(cmerasend src/vedio_send.cpp)
  add_dependencies(cmerasend detection_result_generate_messages_cpp control_msgs_generate_messages_cpp)
  target_link_libraries(cmerasend ${OpenCV_LIBS} ${catkin_LIBRARIES})
 
