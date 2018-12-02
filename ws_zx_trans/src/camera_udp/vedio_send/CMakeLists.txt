@@ -40,9 +40,9 @@ include_directories(
 
 
 
- add_executable(cmerasend src/vedio_send.cpp)
- add_dependencies(cmerasend detection_result_generate_messages_cpp control_msgs_generate_messages_cpp)
- target_link_libraries(cmerasend ${OpenCV_LIBS} ${catkin_LIBRARIES})
+ add_executable(vedio_send src/vedio_send.cpp)
+ add_dependencies(vedio_send detection_result_generate_messages_cpp control_msgs_generate_messages_cpp)
+ target_link_libraries(vedio_send ${OpenCV_LIBS} ${catkin_LIBRARIES})
 
 
 

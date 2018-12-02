@@ -2,8 +2,6 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
-//#include <WinSock2.h>
-//#pragma comment(lib,"WS2_32.lib")
 #include <unistd.h>//Linux系统下网络通讯的头文件集合
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -29,12 +27,15 @@ using namespace std;
 
 int PORT = 6667;
 int socket_result;
-sockaddr_in addr_result;
+
+//sockaddr_in addr_result;
 Mat image_result;
-int socket_vedio;
-sockaddr_in m_servaddr;
+int socket_handle;
+sockaddr_in socket_address;
+
 Mat image_vedio;
 Mat imshoww;
+
 sockaddr_in client;
 socklen_t len;
 
@@ -56,7 +57,7 @@ void command(){
 		cout << "Input the video channel: ";
 		unsigned char a;
 		cin>>a;
-		sendto(socket_vedio, &a, 2, 0, (const sockaddr*)& client, len);
+		sendto(socket_handle, &a, 2, 0, (const sockaddr*)& client, len);
 		usleep(100000);
 	}
 }
@@ -69,9 +70,10 @@ void receive(){
 	while(1){
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
-		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+		int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
 		int pos = 0;
-		if(n > 12){
+		//下面这几个判断发送过来的包是属于图像和车辆状态信息gps的方式比较随意，不是特别好的方式
+		if(n > 12){//通常发过来的图像包比较大
 			while (pos < n)
 			{
 				decode.push_back(buf[pos++]);//存入vector
@@ -80,7 +82,7 @@ void receive(){
 			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
 			mtx_0.unlock();
 		}
-		if(n == 12){
+		if(n == 12){//发过来的gps信息严格为12个字节
 			uchar_to_float(buf, longitude,latitude,altitude);
 		}
 		if(buf[0] == 231){//第一个字节231代表车辆信息
@@ -90,7 +92,7 @@ void receive(){
 		}
 
 	}
-	close(socket_vedio);
+	close(socket_handle);
 }
 
 void resultReceive(){
@@ -126,7 +128,7 @@ int main(int argc, char** argv)
 	ros::init(argc, argv, "cam_recv");
 	ros::NodeHandle nh;
 	ros::Publisher gps_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("/sensor_fusion_output", 20);
-        ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
+    ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
 	ros::param::get("~port",PORT);
 	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
@@ -134,39 +136,44 @@ int main(int argc, char** argv)
 
 //	namedWindow("result22",CV_WINDOW_NORMAL);
 
-	if ((socket_vedio = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
+	if ((socket_handle = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
 	{
 		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
 		return -1;
 	}
 
-	memset(&m_servaddr, 0, sizeof(m_servaddr));  //初始化结构体
-	m_servaddr.sin_family = AF_INET;           //设置通信方式
-	m_servaddr.sin_port = htons(PORT);         //设置端口号
-	bind(socket_vedio, (sockaddr*)&m_servaddr, sizeof(m_servaddr));//绑定套接字
+	memset(&socket_address, 0, sizeof(socket_address));  //初始化结构体
+	socket_address.sin_family = AF_INET;           //设置通信方式
+	socket_address.sin_port = htons(PORT);         //设置端口号
+	bind(socket_handle, (sockaddr*)&socket_address, sizeof(socket_address));//绑定套接字
 
 
-	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
-	{
-		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
-		return -1;
-	}
+//todo：下面这个套接字没用，可以用来接收点云信息
+//	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
+//	{
+//		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
+//		return -1;
+//	}
+//	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
+//	addr_result.sin_family = AF_INET;           //设置通信方式
+//	addr_result.sin_port = htons(9999);         //设置端口号
+//	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
 
-	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
-	addr_result.sin_family = AF_INET;           //设置通信方式
-	addr_result.sin_port = htons(9999);         //设置端口号
-	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
-
+	//发送命令的线程0,1,2分别代表三路图像
 	std::thread thread_command{command};
+	//接收图像的线程、并且接收速度、gps、档位信息
 	std::thread thread_receive{receive};
-//	std::thread thread3{resultReceive};
-	//	imshoww.create(960+480+3,1280+640+3,CV_8UC3);
-	while(1){
+	//todo: 下面可以再增加一个线程来接收点云信息
+
+
+	while(ros::ok()){
+		std::cout << " in while .." << std::endl;
 		if(!image_vedio.empty()){
 			mtx_0.lock();
 			imshow("vedios",image_vedio);
 			mtx_0.unlock();
 		}
+
 		sensor_driver_msgs::GpswithHeading gps_msg;
 		mtx_gps.lock();
 		gps_msg.gps.altitude = altitude;
@@ -176,10 +183,12 @@ int main(int argc, char** argv)
 		gps_pub.publish(gps_msg);
 
 		//发送车辆状态
-		control_msgs::GetECUReport status_msg;
-		status_msg.shift_cur.gear = gear;
-		status_msg.speed.velocity.linear.x = speed;
-		status_pub.publish(status_msg);
+		if(speed > 0){
+			control_msgs::GetECUReport status_msg;
+			status_msg.shift_cur.gear = gear;
+			status_msg.speed.velocity.linear.x = speed;
+			status_pub.publish(status_msg);
+		}
 //		if(!image_result.empty()){
 //			mtx_1.lock();
 //			imshow("检测结果",image_result);
@@ -190,7 +199,7 @@ int main(int argc, char** argv)
 	}
 	thread_command.join();
 	thread_receive.join();
-//	thread3.join();
+//	todo:增加的线程在这里join
 
 	//namedWindow("vedio-result",CV_WINDOW_NORMAL);
 

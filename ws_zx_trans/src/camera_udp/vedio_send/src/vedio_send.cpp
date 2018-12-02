@@ -293,7 +293,7 @@ void statuscallback(const control_msgs::GetECUReportConstPtr& status_msg){
 }
 int main(int argc, char ** argv)
 {
-	ros::init(argc, argv, "sub_one_image");
+	ros::init(argc, argv, "vedio_send");
 	ros::NodeHandle nh;
 
 	//从launch文件里面获得需要发送到的目标Ip地址，端口等信息，这些有默认值（写在上面全局变量）
@@ -339,6 +339,7 @@ int main(int argc, char ** argv)
 	ros::Subscriber sub_screeb = nh.subscribe("screen_image_topic", 1, screen_cb);//屏幕截图
 //	ros::Subscriber sub_probe = nh.subscribe("realtime_video_topic", 1, probecb);//侦察视频
 	ros::Subscriber sub_left = nh.subscribe("/left_image", 1, leftimageCb);//左侧相机--比赛时用他来代替侦察相机
+	//todo:这里可以增加一个接收点云的回调函数，接收到之后直接在该函数里发送即可
 
 	//这两个是后来添加的话题，唐波需要我发过去
 	ros::Subscriber sub_gps = nh.subscribe("/sensor_fusion_output", 1, gpscallback);//只用了这里面的经纬高度

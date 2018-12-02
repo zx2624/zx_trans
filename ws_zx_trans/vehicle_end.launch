@@ -2,12 +2,12 @@
 <launch>
 
 <!--  此ip为视频发送的目标ip , 即指挥所电脑ip  </-->
-  <param name="ip" type="string" value="192.168.1.54" />
+  <param name="ip" type="string" value="192.168.1.8" />
 
 
 <!--  视频传输</-->
 
-  <node pkg="camera_udp" name="cmerasend" type="cmerasend" output="screen">
+  <node pkg="vedio_send" name="vedio_send" type="vedio_send" output="screen">
         <param name="frame_id" value="base_link" />
 	<param name="port2" type="int" value="9999" />
 	<param name="port" type="int" value="6667" />
