@@ -27,10 +27,26 @@ def screen_cap():
     bridge = CvBridge()
     publisher = rospy.Publisher('screen_image_topic', Image, queue_size=10)
     i = 0
+    #change to the window name  you need
+    windows = ['Blender', 'Home', 'System Settings']
+    lenth = len(windows)
     while True:
-        # print "capture iing"sldkfj;slkfd
+        # get the size of the first window, notice for now its just the first!!!!!!!!!!!!!!1
+        name = windows[0]
+        check_win_name(name)
+
+        rm_above(name)
+        add_above(name)
+
+        win_attr = get_win_attr(name)
+        x1 = int(win_attr[1])
+        y1 = int(win_attr[2])
+        x2 = int(win_attr[1]) + int(win_attr[3])
+        y2 = int(win_attr[2]) + int(win_attr[4])
+        area = (x1, y1, x2, y2)
         # capture computer screen
-        img = ImageGrab.grab()
+        img = ImageGrab.grab(bbox=area)
+        # img.show()
         # convert image to numpy array
         img_np = np.array(img)
         # convert color space from BGR to RGB

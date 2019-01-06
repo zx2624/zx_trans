@@ -148,11 +148,11 @@ void float_to_uchar(float b, unsigned char* sendbuf){
 
 void command(){
 	//recv
-	while(1)
+	while(ros::ok())
 	{
 		unsigned char buf[1];
 		//接收从服务器（遥控端）发回来的命令
-		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& server_vedio, &len);//接受缓存
+		int n = recvfrom(socket_vedio, buf, sizeof(buf), 1,(sockaddr *)& server_vedio, &len);//接受缓存
 		if (n > 0) {
 			if(buf[0]=='0'||buf[0]=='1'||buf[0]=='2')
 			{
@@ -160,10 +160,13 @@ void command(){
 				cout << "read command from server: " << flag_channel << endl;
 			}
 		}
+		std::cout << "in while .." << std::endl;
 	}
+	std::cout << " command done " << std::endl;
 }
 void process(){
 	while(ros::ok()){
+		std::cout << "in process --" << std::endl;
 		double timenow=ros::Time::now().toSec();
 		lasttime = timenow;
 		Mat imgsend;
@@ -248,7 +251,7 @@ void process(){
 }
 //这个函数没用到
 void sendResult(){
-	while(1){
+	while(ros::ok()){
 		if(!image_2.empty()){//!imgsend.empty()
 			std::vector<uchar> data_encode;
 			std::vector<int> quality;
@@ -351,7 +354,7 @@ int main(int argc, char ** argv)
 
 	//整体的发送在这里面进行
 	std::thread thread4{process};
-
+	thread4.join();
 	ros::spin();
 	close(socket_vedio);
 
