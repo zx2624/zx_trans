@@ -1,0 +1,11 @@
+ws_zx_trans/build/
+ws_zx_trans/devel/
+toyota_zhuxitai/
+ws_zx_trans/.cproject
+*.project
+*.pydevproject
+ivrc_ws/
+.cproject
+.settings/
+ws_zx_trans/.catkin_tools/
+ws_zx_trans/.settings/
