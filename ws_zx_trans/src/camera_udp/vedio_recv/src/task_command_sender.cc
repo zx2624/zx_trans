@@ -78,12 +78,29 @@ void uchar_to_float(unsigned char* buf, float& longi, float& lati,float& alti){
 	alti = int ( buf[8] | buf[9] << 8 | buf[10] <<16 | buf[11] << 24) * 0.00001;
 }
 void receive(){
-	while(1){
+	while(ros::ok()){
+		std::cout << "in whilellll" << std::endl;
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
 		int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
 		if(n > 0){
 			std::cout << "连接建立11！！" << std::endl;
+			std::fstream f;
+			f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
+			f.seekg(0, f.end);
+			size_t size = f.tellg();
+			std::cout << "================" << size << "-----------" << std::endl;
+			f.seekg(ios::beg);
+			TaskFile taskfile;
+			taskfile.h1 = 0xf3;
+			taskfile.h2 = 0x10;
+			taskfile.type = 0x01;//机动
+			taskfile.len = (unsigned short) (size);
+			std::cout << "================" << taskfile.len << "-----------" << std::endl;
+			f.read(taskfile.data, taskfile.len);
+			f.close();
+			char *sPack = (char *) &taskfile;
+			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
 		}
 
 
@@ -158,25 +175,10 @@ int main(int argc, char** argv)
 	//发送命令的线程0,1,2分别代表三路图像
 //	std::thread thread_command{command};
 	//接收图像的线程、并且接收速度、gps、档位信息
-//	std::thread thread_receive{receive};
+	std::thread thread_receive{receive};
 	//todo: 下面可以再增加一个线程来接收点云信息
 
-	std::fstream f;
-	f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
-	f.seekg(0, f.end);
-	size_t size = f.tellg();
-	std::cout << "================" << size << "-----------" << std::endl;
-	f.seekg(ios::beg);
-	TaskFile taskfile;
-	taskfile.h1 = 0xf3;
-	taskfile.h2 = 0x10;
-	taskfile.type = 0x01;//机动
-	taskfile.len = (unsigned short) (size);
-	std::cout << "================" << taskfile.len << "-----------" << std::endl;
-	f.read(taskfile.data, taskfile.len);
-	f.close();
-	char *sPack = (char *) &taskfile;
-	sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+
 	//todo: 增加校验和
 
 
@@ -212,7 +214,7 @@ int main(int argc, char** argv)
 		usleep(100000);
 	}
 //	thread_command.join();
-//	thread_receive.join();
+	thread_receive.join();
 //	todo:增加的线程在这里join
 
 	//namedWindow("vedio-result",CV_WINDOW_NORMAL);
