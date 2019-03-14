@@ -21,14 +21,12 @@
 #include <fcntl.h>
 #include <mutex>
 #include <thread>
-#include "/home/zcy/zx_trans-master/ws_zx_trans/src/dependent_package/utm.h"
 #include "detection_result/detection_result_msg.h"
 #include "object_detector_msgs/laser_electronic_result.h"
 #include "sensor_driver_msgs/GpswithHeading.h"
 #include "control_msgs/GetECUReport.h"
 #include "lanelet_map_msgs/Way.h"
 #include "plan2control_msgs/Trajectory.h"
-#include "command_msg/task.h"
 using namespace std;
 using namespace cv;
 int PORT = 13010;
@@ -109,8 +107,6 @@ typedef union
 
 double a2=6378137;
 double e2= 0.0818192*0.0818192;
-GridZone zone =UTM_ZONE_AUTO;
-Hemisphere hemi = HEMI_NORTH;
 vector<double>  localPos_x;
 vector<double>  localPos_y;
 //套接字和对应的句柄，用udp等网络编程在linux下都需要经过套接字，当时是为了
@@ -272,134 +268,8 @@ void process(){
 
 
 
-		//                else{//如果需要的图像是空的话，发送屏幕截图，通常这个不是空的，保证有图像发出去（没什么实际意义）
-		//			if(!image_2.empty()){
-		//				std::vector<uchar> data_encode;
-		//				std::vector<int> quality;
-		//				quality.push_back(CV_IMWRITE_JPEG_QUALITY);
-		//				quality.push_back(90);//进行50%的压缩
-		//				mtx_2.lock();
-		//				imencode(".jpg", image_2, data_encode,quality);//将图像编码
-		//				mtx_2.unlock();
-		//				int nSize=data_encode.size();
 
-		//				//			cout<<"size is "<<nSize<<endl;
-		//				for (int i = 0; i < nSize; i++)
-		//				{
-		//					encodeImg[i] = data_encode[i];
-		//					//				cout<<i<<"   "<<nSize<<endl;
-		//				}
-		//				sendto(socket_vedio, encodeImg, nSize, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-		//				memset(&encodeImg, 0, sizeof(encodeImg));  //初始化结构体
-		//			}
-		//		}
-		unsigned char vehicleHead[2];
-		vehicleHead[0]=0xF1;
-		vehicleHead[1]=0x00;
-		sendto(socket_vedio, vehicleHead, 2, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
 
-		//这个是为了发送经纬度，当经度不是0的时候任务是有效点可以发送了
-		if(latitude > 10){
-			//
-			//	    unsigned char send_buf_gps[12];
-			mtx_gps.lock();
-			camcoord gpsPos;
-
-			gpsPos.head1 = 0xF4;
-			gpsPos.head2 = 0x04;
-			gpsPos.len = 1;
-			gpsPos.coord[0]=longitude;
-			gpsPos.coord[1]=latitude;
-			char *gpsPack = (char *) &gpsPos;
-			//	    float_to_uchar(longitude, send_buf_gps);
-			//	    float_to_uchar(latitude, send_buf_gps + 4);
-			//          float_to_uchar(altitude, send_buf_gps + 8);
-			mtx_gps.unlock();
-			sendto(socket_vedio, gpsPack, 8*2+2+4, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-		}
-		//		//发送车辆信息
-		//		unsigned char send_buf_status[6];
-		//		send_buf_status[0] = 231;//第一个字节==231代表传输的是状态信息
-		//		mtx_status.lock();
-		//		float_to_uchar(speed, send_buf_status + 1);
-		//		send_buf_status[5] = (unsigned char) gear;//第六个字节代表档位
-		//		mtx_status.unlock();
-		//                //sendto(socket_vedio, send_buf_status, 6, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-
-		//发送全局规划的路点
-		mtx_path.lock();
-		camcoord globalPack;
-		globalPack.head1 = 0xF1;
-		globalPack.head2 = 0x10;
-		globalPack.len = globalPos_x.size();
-		//        cout<<"globalPos_x.size(): "<<globalPos_x.size()<<endl;
-		for(int i=0;i<globalPos_x.size();i++)
-		{
-			cout<<"globalPos_y:"<<globalPos_y[i]<<"  globalPos_x[i]:"<<globalPos_x[i]<<endl;
-			double North,East;
-			grid_to_geographic( a2, e2,zone, hemi, globalPos_y[i], globalPos_x[i], &North, &East);
-			globalPack.coord[2*i]=East*180/M_PI;
-			globalPack.coord[2*i+1]=North*180/M_PI;
-			cout<<"North:"<<North*180/M_PI<<"  East:"<<East*180/M_PI<<endl;
-		}
-		char *gPack = (char *) &globalPack;
-		mtx_path.unlock();
-		int actualLen=0;
-		if(65535<globalPack.len*8*2+6)
-			actualLen=65535;
-		else
-			actualLen=globalPack.len*8*2+6;
-		sendto(socket_vedio, gPack, actualLen, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-		if(latitude > 10){
-			//发送局部规划的路点
-			mtx_local_path.lock();
-			camcoord localPack;
-			localPack.head1 = 0xF1;
-			localPack.head2 = 0x11;
-			localPack.len = localPos_x.size();
-			//        cout<<"localPos_x.size(): "<<localPos_x.size()<<endl;
-			double N;
-			double E;
-			for(int i=0;i<localPos_x.size();i++)
-			{
-
-				//            cout<<"latitude: "<<latitude<< "  longitude: "<< longitude<<endl;
-				//            cout<<" a2: "<< a2<< "  e2: "<< e2<<endl;
-				//            cout<<" zone: "<<zone<< "  hemi: "<< hemi<<endl;
-				geographic_to_grid( a2, e2, latitude*M_PI/180, longitude*M_PI/180, &zone, &hemi,&N, &E);//gps的位置（经纬度）转化为米制
-				//            cout<<"N_m:"<<N<<"  E_m:"<<E<<endl;
-				double Y_m=N+localPos_y[i];
-				double X_m=E+localPos_x[i];
-				//cout<<"Y_m:"<<Y_m<<"  X_m:"<<X_m<<endl;
-				double North,East;
-				grid_to_geographic( a2, e2,zone, hemi, Y_m, X_m, &North, &East);
-				localPack.coord[2*i]=East*180/M_PI;
-				localPack.coord[2*i+1]=North*180/M_PI;
-				//            cout<<"North:"<<North*180/M_PI<<"  East:"<<East*180/M_PI<<endl;
-			}
-			char *lPack = (char *) &localPack;
-			mtx_local_path.unlock();
-			int actualLen2=0;
-			if(65535<localPack.len*8*2+6)
-				actualLen2=65535;
-			else
-				actualLen2=localPack.len*8*2+6;
-			sendto(socket_vedio, lPack, actualLen2, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-
-		}
-		if (heartbeat != 10)
-			++ heartbeat;
-		else {
-			char v_heartbeat[10];
-			v_heartbeat[0] = char(0xF1);
-			v_heartbeat[1] = char(0xBC);
-			v_heartbeat[2] = char(0x01);
-			v_heartbeat[3] = char(0x00);
-			v_heartbeat[7] = char(0x01);
-			v_heartbeat[8] = char(0x01);
-			sendto(socket_vedio, v_heartbeat, 10, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
-			heartbeat = 1;
-		}
 
 		usleep(100000);
 	}
@@ -516,20 +386,6 @@ void receive(){
 
 		}
 		//接收任务命令
-		unsigned char buf_command[4];
-		unsigned char  task_command[1]={0};
-		int num = recvfrom(socket_vedio, buf_command, sizeof(buf_command), 0,(sockaddr *)& client,&len);//接受缓存
-		if ((buf_command[0]==0xF3)&&(buf_command[1]==0x11))
-		{
-			cout<<"got task command"<<endl;
-			ros::NodeHandle nodehandle_;
-			ros::Publisher commandSender;
-			commandSender = nodehandle_.advertise<command_msg::task>("task_command", 1);
-			task_command[0]=buf_command[2];
-			command_msg::task ogm_msg;
-			ogm_msg.task = task_command[0];
-			commandSender.publish(ogm_msg);
-		}
 		//        测试接收控制命令
 		//        unsigned char buf_control[11];
 		//       int c = recvfrom(socket_vedio, buf_control, sizeof(buf_control), 0,(sockaddr *)& client,&len);

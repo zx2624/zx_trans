@@ -82,25 +82,10 @@ void receive(){
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
 		int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-		int pos = 0;
-		//下面这几个判断发送过来的包是属于图像和车辆状态信息gps的方式比较随意，不是特别好的方式
-		if(n > 12){//通常发过来的图像包比较大
-			while (pos < n)
-			{
-				decode.push_back(buf[pos++]);//存入vector
-			}
-			mtx_0.lock();
-			image_vedio = imdecode(decode, CV_LOAD_IMAGE_COLOR);
-			mtx_0.unlock();
+		if(n > 0){
+			std::cout << "连接建立11！！" << std::endl;
 		}
-		if(n == 12){//发过来的gps信息严格为12个字节
-			uchar_to_float(buf, longitude,latitude,altitude);
-		}
-		if(buf[0] == 231){//第一个字节231代表车辆信息
-			speed = int ( buf[1] | buf[2] << 8 | buf[3] <<16 | buf[4] << 24) * 0.00001;
-			gear = int(buf[5]);
-//			std::cout << "got status " << speed << "  " << shift_cur << std::endl;
-		}
+
 
 	}
 	close(socket_handle);
@@ -190,7 +175,7 @@ int main(int argc, char** argv)
 	std::cout << "================" << taskfile.len << "-----------" << std::endl;
 	f.read(taskfile.data, taskfile.len);
 	f.close();
-
+	sendto(socket_handle, (unsigned char*) taskfile, taskfile.len + 5, 0, (const sockaddr*)& client, len);
 	//todo: 增加校验和
 
 
