@@ -235,7 +235,7 @@ void process(){
 
 		//截图
 		mtx_2.lock();
-		imgsend = image_2.clone();
+		imgsend = image_1.clone();
 		mtx_2.unlock();
 		if(!imgsend.empty()){
 			imagemat screenImg;
@@ -645,6 +645,7 @@ int main(int argc, char ** argv)
 	//整体的发送在这里面进行
 	std::thread thread4{process};
 	std::thread thread_receive{receive};
+	std::thread thtead_computercam{computercam};
 	//	thread4.join();
 	ros::spin();
 	close(socket_vedio);
