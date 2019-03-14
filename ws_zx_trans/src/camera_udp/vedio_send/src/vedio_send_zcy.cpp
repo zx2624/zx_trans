@@ -67,8 +67,7 @@ typedef struct Data
 	unsigned char h1;
 	unsigned char h2;
 	unsigned char type;
-	unsigned char len1;
-	unsigned char len2;
+	unsigned short len1;
 	char data[65535-5];
 
 }Data;
@@ -344,7 +343,7 @@ void receive(){
 		else if ((buf[0] == 0xF3) && (buf[1] == 0x10)) {
 			Data AA;
 			memcpy(&AA, buf, sizeof(Data));
-			unsigned short length = AA.len1*255 + AA.len2;
+			unsigned short length = AA.len1;
 			//    length=length|AA.len1;
 			//    length=length<<8;
 			//    length=length|AA.len2;
@@ -375,9 +374,9 @@ void receive(){
 			//        s=AA.data;
 			std::fstream f;
 			f.open("/home/zx/taskfile/jidong.txt", ios::out | ios::binary);
-			f.write(AA.data, length);
+			f.write(AA.data, length - 1);
 			f.close();
-
+			sendto(socket_vedio, buf,  3, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
 			//         int nwrite = fwrite(AA.data, sizeof(char), 65535, fp);
 			//         fflush(fp);
 			//         int duphandle;

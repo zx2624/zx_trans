@@ -78,16 +78,13 @@ void uchar_to_float(unsigned char* buf, float& longi, float& lati,float& alti){
 	alti = int ( buf[8] | buf[9] << 8 | buf[10] <<16 | buf[11] << 24) * 0.00001;
 }
 void receive(){
-	bool connected = false;
+	bool sent = false;
 	while(ros::ok()){
 		std::cout << "in whilellll" << std::endl;
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
-
 			int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-			if(n > 0)
-				connected = true;
-			if(n > 0){
+			if(n > 0 && !sent){
 				std::cout << "连接建立11！！" << std::endl;
 				std::fstream f;
 				f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
@@ -108,6 +105,11 @@ void receive(){
 					std::cout << "right llllllllllll" << std::endl;
 				}
 				sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+				int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+				if(n == 3){
+					std::cout << "got 33333333333333333333" << std::endl;
+					sent = true;
+				}
 	//			usleep(1000000);
 	//			break;
 		}
