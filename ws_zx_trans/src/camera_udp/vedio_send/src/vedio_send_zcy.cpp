@@ -388,6 +388,7 @@ void receive(){
 	    if ((buf[0]==0xF3)&&(buf[1]==0x11))
 	    {
 	         cout<<"got task command"<<endl;
+	         std::cout << buf[2] + '0' << std::endl;
 //	        ros::NodeHandle nodehandle_;
 //	        ros::Publisher commandSender;
 //	        commandSender = nodehandle_.advertise<command_msg::task>("task_command", 1);
