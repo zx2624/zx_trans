@@ -175,7 +175,8 @@ int main(int argc, char** argv)
 	std::cout << "================" << taskfile.len << "-----------" << std::endl;
 	f.read(taskfile.data, taskfile.len);
 	f.close();
-	sendto(socket_handle, (unsigned char*) taskfile, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+	char *sPack = (char *) &taskfile;
+	sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
 	//todo: 增加校验和
 
 

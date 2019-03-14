@@ -40,7 +40,7 @@ include_directories(
 
 
 
- add_executable(vedio_send src/vedio_send.cpp)
+ add_executable(vedio_send src/vedio_send_zcy.cpp)
  add_dependencies(vedio_send detection_result_generate_messages_cpp control_msgs_generate_messages_cpp)
  target_link_libraries(vedio_send ${OpenCV_LIBS} ${catkin_LIBRARIES})
 
