@@ -281,7 +281,7 @@ void receive(){
 	while(ros::ok()){
 		//接收任务文件
 		unsigned char buf[65535];
-		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+		int n = recvfrom(socket_vedio, buf, sizeof(buf), 0,(sockaddr *)& server_vedio,&len);//接受缓存
 		std::cout << "heard somthing ---------------------------" << std::endl;
 		if ((buf[0] == 0xF3) && (buf[1] == 0x00)) {
 			controlData control;
