@@ -344,8 +344,7 @@ void receive(){
 		else if ((buf[0] == 0xF3) && (buf[1] == 0x10)) {
 			Data AA;
 			memcpy(&AA, buf, sizeof(Data));
-
-			unsigned short length = AA.len1;
+			unsigned short length = AA.len1*255 + AA.len2;
 			//    length=length|AA.len1;
 			//    length=length<<8;
 			//    length=length|AA.len2;
@@ -376,7 +375,7 @@ void receive(){
 			//        s=AA.data;
 			std::fstream f;
 			f.open("/home/zx/taskfile/jidong.txt", ios::out | ios::binary);
-			f.write(AA.data, strlen(AA.data));
+			f.write(AA.data, length);
 			f.close();
 
 			//         int nwrite = fwrite(AA.data, sizeof(char), 65535, fp);

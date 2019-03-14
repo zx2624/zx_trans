@@ -78,12 +78,16 @@ void uchar_to_float(unsigned char* buf, float& longi, float& lati,float& alti){
 	alti = int ( buf[8] | buf[9] << 8 | buf[10] <<16 | buf[11] << 24) * 0.00001;
 }
 void receive(){
+	bool connected = false;
 	while(ros::ok()){
 		std::cout << "in whilellll" << std::endl;
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
-		int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-		if(n > 0){
+
+			int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+			if(n > 0)
+				connected = true;
+			if(n > 0){
 			std::cout << "连接建立11！！" << std::endl;
 			std::fstream f;
 			f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
@@ -104,7 +108,8 @@ void receive(){
 				std::cout << "right llllllllllll" << std::endl;
 			}
 			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
-			break;
+//			usleep(1000000);
+//			break;
 		}
 
 
@@ -127,10 +132,10 @@ void resultReceive(){
 		image_result = imdecode(decode, CV_LOAD_IMAGE_COLOR);
 		mtx_1.unlock();
 		if(!img.empty()){
-//			cout<<"got image result ..  "<<endl;
+			//			cout<<"got image result ..  "<<endl;
 
 		}else{
-//			cout<<"got no image .."<<endl;
+			//			cout<<"got no image .."<<endl;
 		}
 	}
 	close(socket_result);
@@ -141,17 +146,17 @@ int main(int argc, char** argv)
 	//    WSAStartup(0x01, &wsaData); //创建初始化句柄
 	//
 	//    SOCKET socket_vedio;
-//	ros::param::get("~ip",IP);
+	//	ros::param::get("~ip",IP);
 	ros::init(argc, argv, "cam_recv");
 	ros::NodeHandle nh;
 	ros::Publisher gps_pub = nh.advertise<sensor_driver_msgs::GpswithHeading>("/sensor_fusion_output", 20);
-    ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
+	ros::Publisher status_pub = nh.advertise<control_msgs::GetECUReport>("ecudatareport", 20);
 	ros::param::get("~port",PORT);
 	cout<<"视频接收监听端口-- "<<PORT<<endl;
 	cout<<"all begins now"<<endl;
 	namedWindow("vedios",CV_WINDOW_NORMAL);
 
-//	namedWindow("result22",CV_WINDOW_NORMAL);
+	//	namedWindow("result22",CV_WINDOW_NORMAL);
 
 	if ((socket_handle = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
 	{
@@ -165,19 +170,19 @@ int main(int argc, char** argv)
 	bind(socket_handle, (sockaddr*)&socket_address, sizeof(socket_address));//绑定套接字
 
 
-//todo：下面这个套接字没用，可以用来接收点云信息
-//	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
-//	{
-//		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
-//		return -1;
-//	}
-//	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
-//	addr_result.sin_family = AF_INET;           //设置通信方式
-//	addr_result.sin_port = htons(9999);         //设置端口号
-//	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
+	//todo：下面这个套接字没用，可以用来接收点云信息
+	//	if ((socket_result = socket(AF_INET, SOCK_DGRAM, 0)) < 0)    //创建socket句柄，采用UDP协议
+	//	{
+	//		printf("create socket error: %s(errno: %d)\n", strerror(errno), errno);
+	//		return -1;
+	//	}
+	//	memset(&addr_result, 0, sizeof(addr_result));  //初始化结构体
+	//	addr_result.sin_family = AF_INET;           //设置通信方式
+	//	addr_result.sin_port = htons(9999);         //设置端口号
+	//	bind(socket_result, (sockaddr*)&addr_result, sizeof(addr_result));//绑定套接字
 
 	//发送命令的线程0,1,2分别代表三路图像
-//	std::thread thread_command{command};
+	//	std::thread thread_command{command};
 	//接收图像的线程、并且接收速度、gps、档位信息
 	std::thread thread_receive{receive};
 	//todo: 下面可以再增加一个线程来接收点云信息
@@ -209,17 +214,17 @@ int main(int argc, char** argv)
 			status_msg.speed.velocity.linear.x = speed;
 			status_pub.publish(status_msg);
 		}
-//		if(!image_result.empty()){
-//			mtx_1.lock();
-//			imshow("检测结果",image_result);
-//			mtx_1.unlock();
-//		}
+		//		if(!image_result.empty()){
+		//			mtx_1.lock();
+		//			imshow("检测结果",image_result);
+		//			mtx_1.unlock();
+		//		}
 		waitKey(3);
 		usleep(100000);
 	}
-//	thread_command.join();
+	//	thread_command.join();
 	thread_receive.join();
-//	todo:增加的线程在这里join
+	//	todo:增加的线程在这里join
 
 	//namedWindow("vedio-result",CV_WINDOW_NORMAL);
 
