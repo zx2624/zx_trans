@@ -80,39 +80,43 @@ void uchar_to_float(unsigned char* buf, float& longi, float& lati,float& alti){
 void receive(){
 	bool sent = false;
 	while(ros::ok()){
-		std::cout << "in whilellll" << std::endl;
+		//		std::cout << "in whilellll" << std::endl;
 		unsigned char buf[65536];
 		std::vector<uchar> decode;
+		if(!sent){
 			int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-			if(n > 0 && !sent){
-				std::cout << "连接建立11！！" << std::endl;
-				std::fstream f;
-				f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
-				f.seekg(0, f.end);
-				size_t size = f.tellg();
-				std::cout << "================" << size << "-----------" << std::endl;
-				f.seekg(ios::beg);
-				TaskFile taskfile;
-				taskfile.h1 = 0xf3;
-				taskfile.h2 = 0x10;
-				taskfile.type = 0x01;//机动
-				taskfile.len = (unsigned short) (size);
-				std::cout << "================" << taskfile.len << "-----------" << std::endl;
-				f.read(taskfile.data, taskfile.len);
-				f.close();
-				unsigned char *sPack = (unsigned char *) &taskfile;
-				if(sPack[0] == 0xf3 && sPack[1] == 0x10){
-					std::cout << "right llllllllllll" << std::endl;
-				}
-				sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
-				int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
-				if(n == 3){
-					std::cout << "got 33333333333333333333" << std::endl;
-					sent = true;
-				}
-	//			usleep(1000000);
-	//			break;
 		}
+		if(!sent){
+			std::cout << "连接建立11！！" << std::endl;
+			std::fstream f;
+			f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
+			f.seekg(0, f.end);
+			size_t size = f.tellg();
+			std::cout << "================发送文件字符数" << size << "================" << std::endl;
+			f.seekg(ios::beg);
+			TaskFile taskfile;
+			taskfile.h1 = 0xf3;
+			taskfile.h2 = 0x10;
+			taskfile.type = 0x01;//机动
+			taskfile.len = (unsigned short) (size);
+			f.read(taskfile.data, taskfile.len);
+			f.close();
+			unsigned char *sPack = (unsigned char *) &taskfile;
+			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+			int n = recvfrom(socket_handle, buf, sizeof(buf), 0,(sockaddr *)& client,&len);//接受缓存
+			if(n == 3){
+				std::cout << "任务文件发送成功！！！" << std::endl;
+				sent = true;
+			}
+			//			break;
+		}else{
+			char cmd;
+			cin >> cmd;
+			buf[0] = 0xf3;buf[1] = 0x11;
+			buf[2] = cmd - '0';
+			sendto(socket_handle, buf, 3, 0, (const sockaddr*)& client, len);
+		}
+		usleep(10000);
 
 
 	}

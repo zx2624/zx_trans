@@ -385,6 +385,17 @@ void receive(){
 			//         fclose(fp);
 
 		}
+	    if ((buf[0]==0xF3)&&(buf[1]==0x11))
+	    {
+	         cout<<"got task command"<<endl;
+//	        ros::NodeHandle nodehandle_;
+//	        ros::Publisher commandSender;
+//	        commandSender = nodehandle_.advertise<command_msg::task>("task_command", 1);
+//	        task_command[0]=buf_command[2];
+//	        command_msg::task ogm_msg;
+//	        ogm_msg.task = task_command[0];
+//	        commandSender.publish(ogm_msg);
+	    }
 		//接收任务命令
 		//        测试接收控制命令
 		//        unsigned char buf_control[11];
