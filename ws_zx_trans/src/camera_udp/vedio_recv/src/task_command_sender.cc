@@ -88,28 +88,28 @@ void receive(){
 			if(n > 0)
 				connected = true;
 			if(n > 0){
-			std::cout << "连接建立11！！" << std::endl;
-			std::fstream f;
-			f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
-			f.seekg(0, f.end);
-			size_t size = f.tellg();
-			std::cout << "================" << size << "-----------" << std::endl;
-			f.seekg(ios::beg);
-			TaskFile taskfile;
-			taskfile.h1 = 0xf3;
-			taskfile.h2 = 0x10;
-			taskfile.type = 0x01;//机动
-			taskfile.len = (unsigned short) (size);
-			std::cout << "================" << taskfile.len << "-----------" << std::endl;
-			f.read(taskfile.data, taskfile.len);
-			f.close();
-			unsigned char *sPack = (unsigned char *) &taskfile;
-			if(sPack[0] == 0xf3 && sPack[1] == 0x10){
-				std::cout << "right llllllllllll" << std::endl;
-			}
-			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
-//			usleep(1000000);
-//			break;
+				std::cout << "连接建立11！！" << std::endl;
+				std::fstream f;
+				f.open("/home/zx/taskfile/KYXZ2018A.txt", ios::in | ios::binary);
+				f.seekg(0, f.end);
+				size_t size = f.tellg();
+				std::cout << "================" << size << "-----------" << std::endl;
+				f.seekg(ios::beg);
+				TaskFile taskfile;
+				taskfile.h1 = 0xf3;
+				taskfile.h2 = 0x10;
+				taskfile.type = 0x01;//机动
+				taskfile.len = (unsigned short) (size);
+				std::cout << "================" << taskfile.len << "-----------" << std::endl;
+				f.read(taskfile.data, taskfile.len);
+				f.close();
+				unsigned char *sPack = (unsigned char *) &taskfile;
+				if(sPack[0] == 0xf3 && sPack[1] == 0x10){
+					std::cout << "right llllllllllll" << std::endl;
+				}
+				sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+	//			usleep(1000000);
+	//			break;
 		}
 
 
