@@ -25,7 +25,7 @@ include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
 )
-add_executable(vedio_recv src/recv.cc)
+add_executable(vedio_recv src/task_command_sender.cc)
 add_dependencies(vedio_recv sensor_driver_msgs_generate_messages_cpp detection_result_generate_messages_cpp
 control_msgs_generate_messages_cpp)
 target_link_libraries(vedio_recv ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT} ${catkin_LIBRARIES})
