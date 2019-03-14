@@ -99,7 +99,10 @@ void receive(){
 			std::cout << "================" << taskfile.len << "-----------" << std::endl;
 			f.read(taskfile.data, taskfile.len);
 			f.close();
-			char *sPack = (char *) &taskfile;
+			unsigned char *sPack = (unsigned char *) &taskfile;
+			if(sPack[0] == 0xf3 && sPack[1] == 0x10){
+				std::cout << "right llllllllllll" << std::endl;
+			}
 			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
 			break;
 		}
