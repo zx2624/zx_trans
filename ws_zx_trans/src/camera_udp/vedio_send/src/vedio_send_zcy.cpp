@@ -208,7 +208,7 @@ void command(){
 }
 void process(){
 	while(ros::ok()){
-		std::cout << "in process --" << PORT << std::endl;
+//		std::cout << "in process --" << PORT << std::endl;
 		double timenow=ros::Time::now().toSec();
 		lasttime = timenow;
 		Mat imgsend;
@@ -254,11 +254,11 @@ void process(){
 				screenImg.coord[i] = data_encode[i];
 			}
 			//显示
-			Mat image_result = imdecode(data_encode, CV_LOAD_IMAGE_COLOR);
-			int u1=1;
-			char imageFilePath1[200];
-			sprintf(imageFilePath1, "%s%d%s", "/home/zcy/", u1++, ".png");
-			imwrite(imageFilePath1, image_result);
+//			Mat image_result = imdecode(data_encode, CV_LOAD_IMAGE_COLOR);
+//			int u1=1;
+//			char imageFilePath1[200];
+//			sprintf(imageFilePath1, "%s%d%s", "/home/zcy/", u1++, ".png");
+//			imwrite(imageFilePath1, image_result);
 
 			//			//发送
 			char *sPack = (char *) &screenImg;
@@ -368,12 +368,12 @@ void receive(){
 			//                else if(AA.type==0x03)
 			//                  fp = fopen("/home/zcy/taskfile/xunluo", "w");
 
-			cout << "got task  point  " << endl;
+			cout << "got task  point  ------zxzxzxzxzx-------- " << endl;
 			cout << length << endl;
 			//        string s;
 			//        s=AA.data;
 			std::fstream f;
-			f.open("/home/zcy/taskfile/jidong.txt", ios::out | ios::binary);
+			f.open("/home/zx/taskfile/jidong.txt", ios::out | ios::binary);
 			f.write(AA.data, strlen(AA.data));
 			f.close();
 

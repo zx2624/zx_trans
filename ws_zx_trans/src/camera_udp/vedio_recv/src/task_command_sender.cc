@@ -101,6 +101,7 @@ void receive(){
 			f.close();
 			char *sPack = (char *) &taskfile;
 			sendto(socket_handle, sPack, taskfile.len + 5, 0, (const sockaddr*)& client, len);
+			break;
 		}
 
 
