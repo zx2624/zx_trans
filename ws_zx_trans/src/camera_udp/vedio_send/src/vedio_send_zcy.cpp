@@ -245,7 +245,7 @@ void process(){
 			quality.push_back(60);//进行50%的压缩
 			imencode(".jpg", imgsend, data_encode,quality);//将图像编码
 			screenImg.len =data_encode.size();
-			cout << "image size " << screenImg.len << endl;
+			//cout << "image size " << screenImg.len << endl;
 			//图像压缩完毕
 
 			//将压缩好的图像（变成了一个个存在vector里的字节）写到buf里准备发送
@@ -360,7 +360,7 @@ void receive(){
 			//                cout<<sizeof(data)<<endl;
 			//                cout<<data<<endl;
 
-			FILE *fp = fopen("/home/zcy/taskfile/jidong.txt", "w");
+			//FILE *fp = fopen("/home/zcy/taskfile/jidong.txt", "w");
 			//                if(AA.type==0x01)
 			//                  fp = fopen("/home/zcy/taskfile/jidong", "w");
 			//                else if(AA.type==0x02)
@@ -369,7 +369,8 @@ void receive(){
 			//                  fp = fopen("/home/zcy/taskfile/xunluo", "w");
 
 			cout << "got task  point  ------zxzxzxzxzx-------- " << endl;
-			cout << length << endl;
+			std::cout << "the lengh is ......" << length << std::endl;
+
 			//        string s;
 			//        s=AA.data;
 			std::fstream f;
