@@ -1,3 +1,4 @@
+/////////////////////////////////refacoring branch test ...////////////////////////////////////////
 #include <iostream>
 #include <cv_bridge/cv_bridge.h>
 #include <ros/ros.h>
@@ -367,7 +368,7 @@ void receive(){
 			//                else if(AA.type==0x03)
 			//                  fp = fopen("/home/zcy/taskfile/xunluo", "w");
 
-			cout << "got task  point  ------zxzxzxzxzx-------- " << endl;
+			cout << "got task  point  -------------- " << endl;
 			std::cout << "the lengh is ......" << length << std::endl;
 
 			//        string s;
@@ -376,6 +377,8 @@ void receive(){
 			f.open("/home/zx/taskfile/jidong.txt", ios::out | ios::binary);
 			f.write(AA.data, length - 1);
 			f.close();
+			//zx在收到任务文件后发送给3个字节回去表示收到
+			buf[0] = 0xff;buf[1]  = 0x00;buf[2] = 0x0f;
 			sendto(socket_vedio, buf,  3, 0, (const sockaddr*)& server_vedio, sizeof(server_vedio));
 			//         int nwrite = fwrite(AA.data, sizeof(char), 65535, fp);
 			//         fflush(fp);
@@ -388,7 +391,7 @@ void receive(){
 	    if ((buf[0]==0xF3)&&(buf[1]==0x11))
 	    {
 	         cout<<"got task command"<<endl;
-	         std::cout << buf[2] + '0' << std::endl;
+	         std::cout << int(buf[2]) << std::endl;
 //	        ros::NodeHandle nodehandle_;
 //	        ros::Publisher commandSender;
 //	        commandSender = nodehandle_.advertise<command_msg::task>("task_command", 1);
